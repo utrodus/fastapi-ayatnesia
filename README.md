@@ -41,7 +41,6 @@ Features included:
     ```
 
 ## Run it locally
-Copy the `env.example` file into the same directory with the name `.env`
 ```bash
 $ uvicorn main:app --reload
 ```
