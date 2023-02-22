@@ -5,6 +5,6 @@ class JSONReader:
         self.file_path = file_path
 
     def read(self):
-        with open(self.file_path) as f:
+        with open(self.file_path,  encoding="utf8") as f:
             data = json.load(f)
         return data
