@@ -247,7 +247,7 @@ class Bismillah:
 
 
 @dataclass
-class QuranModelElement:
+class QuranModelItem:
     number: int
     number_of_ayahs: int
     name: str
@@ -259,7 +259,7 @@ class QuranModelElement:
     ayahs: List[Ayah]
 
     @staticmethod
-    def from_dict(obj: Any) -> 'QuranModelElement':
+    def from_dict(obj: Any) -> 'QuranModelItem':
         assert isinstance(obj, dict)
         number = from_int(obj.get("number"))
         number_of_ayahs = from_int(obj.get("numberOfAyahs"))
@@ -270,7 +270,7 @@ class QuranModelElement:
         audio = from_str(obj.get("audio"))
         bismillah = Bismillah.from_dict(obj.get("bismillah"))
         ayahs = from_list(Ayah.from_dict, obj.get("ayahs"))
-        return QuranModelElement(number, number_of_ayahs, name, translation, revelation, description, audio, bismillah, ayahs)
+        return QuranModelItem(number, number_of_ayahs, name, translation, revelation, description, audio, bismillah, ayahs)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -286,9 +286,9 @@ class QuranModelElement:
         return result
 
 
-def quran_model_from_dict(s: Any) -> List[QuranModelElement]:
-    return from_list(QuranModelElement.from_dict, s)
+def quran_model_from_dict(s: Any) -> List[QuranModelItem]:
+    return from_list(QuranModelItem.from_dict, s)
 
 
-def quran_model_to_dict(x: List[QuranModelElement]) -> Any:
-    return from_list(lambda x: to_class(QuranModelElement, x), x)
+def quran_model_to_dict(x: List[QuranModelItem]) -> Any:
+    return from_list(lambda x: to_class(QuranModelItem, x), x)
