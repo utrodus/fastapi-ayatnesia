@@ -9,6 +9,7 @@
   - [Requirements:](#requirements)
   - [Installation](#installation)
   - [Run it locally](#run-it-locally)
+  - [install required data nltk library](#install-required-data-nltk-library)
   - [Basic Usage](#basic-usage)
 
 
@@ -43,6 +44,11 @@ Features included:
 ## Run it locally
 ```bash
 $ uvicorn main:app --reload
+```
+
+## install required data nltk library
+```bash
+$ python -m nltk.downloader popular
 ```
 
 ## Basic Usage
