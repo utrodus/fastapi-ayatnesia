@@ -1,7 +1,6 @@
 import json
 from models.quran_model import quran_model_from_dict
 
-
 class JSONReader:
     def __init__(self, file_path):
         """Init method for JSONReader class.
@@ -28,3 +27,4 @@ class JSONReader:
         read_results = self.read_json_file()
         quran_data = quran_model_from_dict(read_results)
         return quran_data
+
