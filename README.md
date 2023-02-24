@@ -52,4 +52,8 @@ $ python -m nltk.downloader popular
 ```
 
 ## Basic Usage
+first off all, run preprocessing quran data for preprocessing ayahs for each surahs
+```bash
+$ python src/quran_preprocessing.py
+```
 Once you are running the server open the [Swagger UI App](http://localhost:8000/docs) to checkout the API documentation.
