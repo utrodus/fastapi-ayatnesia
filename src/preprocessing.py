@@ -1,4 +1,4 @@
-from json_reader import get_quran_data
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
@@ -43,48 +43,4 @@ class Preprocessing:
         stemming_result = self.stemming_text(remove_stop_words_result)
         return stemming_result
 
-
-# preprocessing_result = Preprocessing(get_quran_data()[1].ayahs[6].translation).execute()
-# print(preprocessing_result)
-
-
-def preprocess_quran_data():
-    """Preprocesses the qur'an data."""
-    print("Preprocessing the qur'an data...")
-    quran_data = get_quran_data()
-    # create a list of dictionaries from the qur'an data preprocessed
-    results = []
-    # create a temporary list of dictionaries for ayahs
-    temp_list_ayahs = []
-    # create a temporary dictionary for surahs
-    temp_dict_surah: dict = {}
-    # create a temporary dictionary for ayahs
-    temp_dict_ayahs: dict = {}
-    # iterate through the qur'an data for preprocessing and store the results in the results list
-    for surah in quran_data:
-        print(f"#---Preprocessing surat: {surah.name}---#\n")
-        temp_dict_surah.clear()
-        for ayah in surah.ayahs:
-            print(f"Preprocessing ayat - {ayah.number}\n")
-            temp_list_ayahs.clear()
-            preprocessing_result = Preprocessing(ayah.translation).execute()
-            temp_dict_ayahs['number'] = ayah.number.to_dict()
-            temp_dict_ayahs['arab'] = ayah.arab
-            temp_dict_ayahs['preprocess_result'] = preprocessing_result
-            temp_dict_ayahs['tafsir'] = ayah.tafsir.to_dict()
-            temp_dict_ayahs['meta'] = ayah.meta.to_dict()
-            temp_list_ayahs.append(temp_dict_ayahs)
-            # print(preprocessing_result, "\n")
-            # ayah.translation = preprocessing_result
-        temp_dict_surah['number'] = surah.number
-        temp_dict_surah['numberOfAyahs'] = surah.number_of_ayahs
-        temp_dict_surah['name'] = surah.name
-        temp_dict_surah['translation'] = surah.translation
-        temp_dict_surah['ayahs'] = temp_list_ayahs
-        results.append(temp_dict_surah)
-    print("\nPreprocessing the qur'an data is done.!\n")
-    return results
-
-
-preprocess_quran_data()
 
