@@ -32,28 +32,28 @@ Features included:
 
 2. Open the console inside the project directory and create a virtual environment (You can skip this step if you have docker installed).
     ```git bash
-    $ python -m venv venv
-    $ source venv/Script/activate
+    $ python -m venv env
+    $ source venv/Scripts/activate
     ```
 
 3. Install the app 
-    ```bash
+    ```git bash
     (venv) $ pip install -r requirements.txt
     ```
 
 ## Run it locally
-```bash
+```git bash
 $ uvicorn main:app --reload
 ```
 
 ## install required data nltk library
-```bash
+```git bash
 $ python -m nltk.downloader popular
 ```
 
 ## Basic Usage
 first off all, run preprocessing quran data for preprocessing ayahs for each surahs
-```bash
+```git bash
 $ python src/quran_preprocessing.py
 ```
 Once you are running the server open the [Swagger UI App](http://localhost:8000/docs) to checkout the API documentation.
