@@ -32,6 +32,7 @@ def preprocess_quran_data():
                     "number": ayah.number.to_dict(),
                     "arabic": ayah.arab,
                     "preprocced": preprocessing_result,
+                    "translation": ayah.translation,
                     "tafsir": ayah.tafsir.kemenag.short,
                 }
             )
