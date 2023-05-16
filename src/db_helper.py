@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import psutil
+
 
 current_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 quran_preprocessed_db_path = os.path.abspath(
@@ -10,7 +12,20 @@ quran_preprocessed_db_path = os.path.abspath(
 conn = sqlite3.connect(quran_preprocessed_db_path)
 c = conn.cursor()
 
+# test connection
+def test_connections():
+    for proc in psutil.process_iter():
+        try:
+            files = proc.get_open_files()
+            if files:
+                for _file in files:
+                    if _file.path == quran_preprocessed_db_path:
+                        return True
+        except psutil.NoSuchProcess as err:
+            print(err)
+    return False
 
+# write quran db
 def write_quran_db(surahs):
     # Create the surah table
     c.execute(
@@ -70,3 +85,19 @@ def write_quran_db(surahs):
 
     # Close the connection
     conn.close()
+    
+def read_all_surahs():
+    c.execute("SELECT * FROM surah")
+    all_surahs = c.fetchall()
+    
+    result = []
+    for item in all_surahs:
+        dictionary = {
+            "id": item[0],
+            "number": item[1],
+            "name": item[2],
+            "translation": item[3]
+        }
+        result.append(dictionary)
+    return result    
+
