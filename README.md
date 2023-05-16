@@ -33,7 +33,7 @@ Features included:
 2. Open the console inside the project directory and create a virtual environment (You can skip this step if you have docker installed).
     ```git bash
     $ python -m venv env
-    $ source venv/Scripts/activate
+    $ source env/Scripts/activate
     ```
 
 3. Install the app 
