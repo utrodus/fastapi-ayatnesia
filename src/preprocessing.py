@@ -1,7 +1,7 @@
 
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
+from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 
@@ -22,9 +22,15 @@ class Preprocessing:
 
     def remove_stop_words(self, word_tokens):
         """Removes the stop words from the text."""
-        stop_words = set(stopwords.words("indonesian"))
-        filtered_sentence = [w for w in word_tokens if not w in stop_words]
-        return filtered_sentence
+        stopword_factory = StopWordRemoverFactory()
+        stopword_remover = stopword_factory.create_stop_word_remover()
+        filtered_sentence_result = []
+        for token in word_tokens:
+            filtered_sentence = stopword_remover.remove(token)
+            if(filtered_sentence != "" and filtered_sentence != ''):
+                filtered_sentence_result.append(filtered_sentence)
+        
+        return filtered_sentence_result
 
     def stemming_text(self, word_tokens):
         """Stems the text."""
@@ -42,5 +48,3 @@ class Preprocessing:
         remove_stop_words_result = self.remove_stop_words(tokenize_result)
         stemming_result = self.stemming_text(remove_stop_words_result)
         return stemming_result
-
-
