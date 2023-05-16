@@ -31,6 +31,7 @@ def write_quran_db(surahs):
                 numberInSurah INTEGER,
                 arabic TEXT,
                 preprocessed TEXT,
+                translation TEXT,
                 tafsir TEXT,
                 FOREIGN KEY(surah_id) REFERENCES surah(id)
                 )"""
@@ -56,10 +57,11 @@ def write_quran_db(surahs):
                 ayah["number"]["inSurah"],
                 ayah["arabic"],
                 ",".join(ayah["preprocced"]),
+                ayah["translation"],
                 ayah["tafsir"],
             )
             c.execute(
-                "INSERT INTO ayahs (surah_id, numberInQuran, numberInSurah, arabic, preprocessed, tafsir) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO ayahs (surah_id, numberInQuran, numberInSurah, arabic, preprocessed, translation, tafsir) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 ayah_values,
             )
 
