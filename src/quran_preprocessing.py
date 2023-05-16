@@ -22,29 +22,37 @@ def preprocess_quran_data():
     results = []
 
     # iterate through the qur'an data for preprocessing and store the results in the results list
+    
     for surah in quran_data:
         print(f"## Preprocessing surat: {surah.name} \n")
+        # print(f"Number of ayahs: {len(surah.ayahs)} \n")
+        
         for ayah in surah.ayahs:
-            # print(f"Preprocessing ayat - {ayah.number.in_surah} \n")
             preprocessing_result = Preprocessing(ayah.translation).execute()
-            temp_list_ayahs.append(
+            # check if ayah added to the list of ayahs
+            if ayah not in temp_list_ayahs:
+                temp_list_ayahs.append(
                 {
                     "number": ayah.number.to_dict(),
                     "arabic": ayah.arab,
                     "preprocced": preprocessing_result,
-                    "translation": ayah.translation,
+                    "translation": ayah.translation,    
                     "tafsir": ayah.tafsir.kemenag.short,
                 }
             )
+                                  
         results.append(
-            {
-                "name": surah.name,
-                "number": surah.number,
-                "translation": surah.translation,
-                "ayahs": temp_list_ayahs,
-            }
-        )
-
+                {
+                    "name": surah.name,
+                    "number": surah.number,
+                    "translation": surah.translation,
+                    "ayahs": temp_list_ayahs,
+                }
+            )
+        if(temp_list_ayahs != []):
+            temp_list_ayahs = []  
+           
+                            
     write_quran_db(results)
     print("\nPreprocessing the qur'an data is done.!\n")
 

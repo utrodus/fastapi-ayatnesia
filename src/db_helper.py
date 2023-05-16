@@ -30,8 +30,7 @@ def write_quran_db(surahs):
     # Create the surah table
     c.execute(
         """CREATE TABLE surah (
-                id INTEGER PRIMARY KEY,
-                number INTEGER,
+                id INTEGER PRIMARY KEY,             
                 name TEXT,
                 translation TEXT
                 )"""
@@ -53,18 +52,17 @@ def write_quran_db(surahs):
     )
 
     # Insert surahs into the surah table and ayahs into the ayahs table
-    for surah in surahs:
-        surah_values = (
-            surah["number"],
+    for surah in surahs:        
+        surah_values = (            
             surah["name"],
             surah["translation"],
         )
         c.execute(
-            "INSERT INTO surah (number, name, translation) VALUES (?, ?, ?)",
+            "INSERT INTO surah (name, translation) VALUES (?, ?)",
             surah_values,
         )
 
-        surah_id = c.lastrowid
+        surah_id = surah["number"]
         for ayah in surah["ayahs"]:
             ayah_values = (
                 surah_id,
@@ -93,10 +91,9 @@ def read_all_surahs():
     result = []
     for item in all_surahs:
         dictionary = {
-            "id": item[0],
-            "number": item[1],
-            "name": item[2],
-            "translation": item[3]
+            "id": item[0],            
+            "name": item[1],
+            "translation": item[2]
         }
         result.append(dictionary)
     return result    
