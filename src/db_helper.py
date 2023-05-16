@@ -98,3 +98,24 @@ def read_all_surahs():
         result.append(dictionary)
     return result    
 
+# read all ayahs from surah by surah id
+def read_all_ayahs_by_surah_id(surah_id):
+    c.execute("SELECT * FROM ayahs WHERE surah_id = ?", (surah_id,))
+    all_ayahs = c.fetchall()
+    
+    result = []
+    for item in all_ayahs:
+        dictionary = {
+            "id": item[0],
+            "surah_id": item[1],
+            "number": {
+                "inQuran": item[2],
+                "inSurah": item[3]
+            },
+            "arabic": item[4],
+            "preprocessed": item[5].split(","),
+            "translation": item[6],
+            "tafsir": item[7]
+        }
+        result.append(dictionary)
+    return result
