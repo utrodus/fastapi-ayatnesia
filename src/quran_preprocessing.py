@@ -5,10 +5,6 @@ import os
 
 current_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 quran_json_path = os.path.abspath(os.path.join(current_path, "data/quran.json"))
-quran_preprocessed = os.path.abspath(
-    os.path.join(current_path, "data/preprocessed.json")
-)
-
 
 def get_quran_data():
     """Returns the data from the JSON file."""
