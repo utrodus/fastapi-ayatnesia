@@ -3,11 +3,13 @@ from nltk.tokenize import word_tokenize
 import re
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-
+from data.stopword_list import StopWordList
 
 class Preprocessing:
-    def __init__(self, input_string):
+    def __init__(self, input_string):        
         self.input_string = input_string
+        stopword_list = StopWordList()
+        self.stopword_list = stopword_list.get_stopword_list()                
 
     def casefold_string(self):
         """Converts all the characters in the text to lowercase."""
@@ -22,14 +24,7 @@ class Preprocessing:
 
     def remove_stop_words(self, word_tokens):
         """Removes the stop words from the text."""
-        stopword_factory = StopWordRemoverFactory()
-        stopword_remover = stopword_factory.create_stop_word_remover()
-        filtered_sentence_result = []
-        for token in word_tokens:
-            filtered_sentence = stopword_remover.remove(token)
-            if(filtered_sentence != "" and filtered_sentence != ''):
-                filtered_sentence_result.append(filtered_sentence)
-        
+        filtered_sentence_result = [w for w in word_tokens if not w in self.stopword_list]        
         return filtered_sentence_result
 
     def stemming_text(self, word_tokens):
@@ -48,3 +43,4 @@ class Preprocessing:
         remove_stop_words_result = self.remove_stop_words(tokenize_result)
         stemming_result = self.stemming_text(remove_stop_words_result)
         return stemming_result
+            
