@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from data.database.database import test_connections, get_all_surahs, get_all_ayahs_by_surah_id
+from src.database.database import test_connections, get_all_surahs, get_all_ayahs_by_surah_id
 app = FastAPI()
 app.title = (
     "Quran Search API for searching Quranic verses with lexical and semantic features"
@@ -19,7 +19,7 @@ async def test_connections():
     return {"message": "Quran Finder API is not running. "}
 
 @app.get("/all-surahs")
-async def get_all_surahs():
+async def get_list_surah():
     all_surah = get_all_surahs()
     return all_surah
 
@@ -27,3 +27,4 @@ async def get_all_surahs():
 async def get_surah(surah_id: int):
     ayahs = get_all_ayahs_by_surah_id(surah_id)
     return ayahs
+
