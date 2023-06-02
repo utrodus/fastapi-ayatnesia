@@ -1,6 +1,7 @@
 import math
 import sys
 sys.path.append("src")
+
 from preprocessing.preprocessing import Preprocessing
 from database.database import get_all_ayahs
 
@@ -17,10 +18,10 @@ def calculate_tf(document, term):
 # Function to calculate inverse document frequency (IDF)
 def calculate_idf(documents, term):
     num_documents_with_term = sum(1 for document in documents if term in document)
-    if(num_documents_with_term > 0):
+    if num_documents_with_term > 0:
         return 1.0 + math.log(float(len(documents) / (1 + num_documents_with_term)))
     else: 
-        return 1.0        
+        return 1.0
 
 # Function to calculate TF-IDF
 def calculate_tfidf(document, documents, term):
@@ -41,16 +42,20 @@ def calculate_cosine_similarity(query_vector, document_vector):
     similarity = dot_product / (query_vector_length * document_vector_length)
     return similarity
 
-
 # Calculate TF-IDF for query
 query_tfidf = [calculate_tfidf(query, documents, term) for term in query]
+
 # Calculate TF-IDF for each document and find cosine similarity
-similarities = []
-for document in documents:
+similarities = {}
+for i, document in enumerate(documents):
     document_tfidf = [calculate_tfidf(document["preprocessed"], documents, term) for term in query]
     similarity = calculate_cosine_similarity(query_tfidf, document_tfidf)
-    similarities.append(similarity)
+    similarities[i] = similarity
 
-# Print the similarity scores
-for i, similarity in enumerate(similarities):
-    print(f"Similarity score for document {i+1}: {similarity}")
+# Sort the similarities in descending order
+similarities = sorted(similarities.items(), key=lambda x: x[1], reverse=True)
+
+# Print the top 10 similarity scores with percentages
+for i, (document_index, similarity) in enumerate(similarities[:10]):
+    similarity_percentage = similarity * 100
+    print(f"Similarity score for document {document_index+1}: {similarity} : {similarity_percentage:.2f}%")
