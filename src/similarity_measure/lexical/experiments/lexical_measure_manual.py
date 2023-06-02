@@ -1,6 +1,8 @@
 import numpy as np
 import math
 import pandas as pd
+import sys
+sys.path.append("src")
 # from db_helper import get_all_ayahs
 from preprocessing.preprocessing import Preprocessing
 # #all ayahs docs

@@ -1,34 +1,98 @@
+# import numpy as np
+
+# class CosineSimilarity:
+#     def __init__(self, documents, tfidf_dict_qry, df, query):
+#         self.documents = documents
+#         self.tfidf_dict_qry = tfidf_dict_qry
+#         self.df = df
+#         self.query = query
+        
+#     def compute(self, df, doc_num):
+#         dot_product = 0
+#         qry_mod = 0
+#         doc_mod = 0
+
+#         for keyword in self.query:
+#             dot_product += self.tfidf_dict_qry[keyword] * df[keyword][df['doc'] == doc_num]
+#             qry_mod += self.tfidf_dict_qry[keyword] * self.tfidf_dict_qry[keyword]
+#             doc_mod += df[keyword][df['doc'] == doc_num] * df[keyword][df['doc'] == doc_num]
+#         qry_mod = np.sqrt(qry_mod)
+#         doc_mod = np.sqrt(doc_mod)
+#         denominator = qry_mod * doc_mod
+#         cos_sim = dot_product / denominator
+
+#         return cos_sim
+    
+#     def rank_similarity_docs(self):
+#         cos_sim = []
+#         for doc_num in range(0, len(self.documents)):
+#             cos_sim.append(self.compute( self.df, doc_num).tolist())
+#         return cos_sim
 import numpy as np
-import math
-import pandas as pd
+
+# class CosineSimilarity:
+#     def __init__(self, documents, tfidf_dict_qry, df, query):
+#         self.documents = documents
+#         self.tfidf_dict_qry = tfidf_dict_qry
+#         self.df = df
+#         self.query = query
+        
+#     def compute(self, df, doc_num):
+#         dot_product = 0
+#         qry_mod = 0
+#         doc_mod = 0
+
+#         for keyword in self.query:
+#             dot_product += self.tfidf_dict_qry[keyword] * df.loc[df['doc'] == doc_num, keyword].values[0]
+#             qry_mod += self.tfidf_dict_qry[keyword] ** 2
+#             doc_mod += df.loc[df['doc'] == doc_num, keyword].values[0] ** 2
+        
+#         qry_mod = np.sqrt(qry_mod)
+#         doc_mod = np.sqrt(doc_mod)
+#         denominator = qry_mod * doc_mod
+
+#         # Handle division by zero
+#         if np.any(denominator != 0) and not np.isnan(denominator).any():
+#             cos_sim = dot_product / denominator
+#         else:
+#             cos_sim = 0.0
+
+#         return cos_sim
+    
+#     def rank_similarity_docs(self):
+#         cos_sim = []
+#         for doc_num in range(0, len(self.documents)):
+#             cos_sim.append(self.compute(self.df, doc_num["preprocessed"]))
+#         return cos_sim
 
 class CosineSimilarity:
-    def __init__(self, query, doc_num, tfidf_dict_qry, document_frequency, tfidf_dict_doc):
-        """
-        Menginisialisasi kelas CosineSimilarity.
-
-        Args:
-            quran_documents (list): Sebuah daftar dokumen Quran.
-            query (str): String query untuk perhitungan similaritas cosine.
-        """
-        self.query = query
-        self.doc_num = doc_num
-        self.tfidf_dict_qry = tfidf_dict_qry
-        self.document_frequency = document_frequency
-        self.tfidf_dict_doc = tfidf_dict_doc
+    @staticmethod
+    def compute(tfidf_dict_qry, df, query, doc_num):
+        dot_product = 0
+        qry_mod = 0
+        doc_mod = 0
     
-    def cosine_similarity(self, vector1, vector2):
-        """
-        Menghitung similaritas cosine antara dua vektor.
+        for keyword in query:
+            dot_product += tfidf_dict_qry[keyword] * df[keyword][df['doc'] == doc_num]
+            qry_mod += tfidf_dict_qry[keyword] * tfidf_dict_qry[keyword]
+            doc_mod += df[keyword][df['doc'] == doc_num] * df[keyword][df['doc'] == doc_num]
+        qry_mod = np.sqrt(qry_mod)
+        doc_mod = np.sqrt(doc_mod)
+        denominator = qry_mod * doc_mod
+        cos_sim = dot_product / denominator
 
-        Args:
-            vector1 (np.array): Vektor pertama.
-            vector2 (np.array): Vektor kedua.
+        return cos_sim
 
-        Returns:
-            float: Similaritas cosine antara dua vektor.
-        """
-        dot_product = np.dot(vector1, vector2)
-        norm_vector1 = np.linalg.norm(vector1)
-        norm_vector2 = np.linalg.norm(vector2)
-        return dot_product / (norm_vector1 * norm_vector2)
+
+class RankSimilarityDocs:
+    def __init__(self, documents, tfidf_dict_qry, df, query):
+        self.documents = documents
+        self.tfidf_dict_qry = tfidf_dict_qry
+        self.df = df
+        self.query = query
+
+    def compute(self):
+        cos_sim = []
+        for doc_num in range(0, len(self.documents)):
+            cos_sim.append(CosineSimilarity.compute(self.tfidf_dict_qry, self.df, self.query, doc_num).tolist())
+        return cos_sim
