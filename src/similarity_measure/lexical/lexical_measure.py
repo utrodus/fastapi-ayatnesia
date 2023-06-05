@@ -1,32 +1,47 @@
 import sys
 sys.path.append("src")
-from preprocessing.preprocessing import Preprocessing
 from database.database import get_all_ayahs
-from tf_idf import TFIDF
-from cosine_similarity import RankSimilarityDocs
+from similarity_measure.lexical.tf_idf import TFIDF
+from similarity_measure.lexical.cosine_similarity import CosineSimilarity
 
 class LexicalMeasure:
-    def __init__(self, query):
-        self.query = Preprocessing(query).execute()
-        self.documents = get_all_ayahs()        
+    # initialize documents, results, and similarities
+    def __init__(self):
+        self.documents = get_all_ayahs()
+        self.results = []
+        self.similarities = {}      
+          
+    # Clear results and similarities 
+    def clear_results(self):
+        self.results.clear() 
+        self.similarities.clear()
+        
+    # Calculate TF-IDF for each document and find cosine similarity
+    def calculate_lexical_similarity(self, query : list):
+        self.clear_results()
+        query_tfidf = [TFIDF.calculate(query, self.documents, term) for term in query]
+        
+        for i, document in enumerate(self.documents):
+            document_tfidf = [TFIDF.calculate(document["preprocessed"], self.documents, term) for term in query]
+            similarity = CosineSimilarity.calculate(query_tfidf, document_tfidf)
+            self.similarities[i] = similarity
+                        
+        self.sort_similarities()
     
-    def execute(self):
-        tfidf = TFIDF(self.documents)        
-        # compute tf-idf for query
-        self.query_norm_tf = tfidf.compute_query_tf(self.query)
-        self.idf_dict_qry = tfidf.compute_query_idf(self.query)                
-        tfidf_dict_qry = tfidf.compute_query_tfidf(self.query)        
+    # sort similarities in descending order
+    def sort_similarities(self):
+        self.similarities = sorted(self.similarities.items(), key=lambda x: x[1], reverse=True)
         
-        # # compute tf-idf for documents
-        self.tf_doc = tfidf.tf_doc
-        # print(self.tf_doc)
-        self.idf_dict = tfidf.idf_dict
-        # print(self.idf_dict)
-        self.tf_idf, self.df = tfidf.compute_tfidf_with_alldocs(self.query)
-        # print(self.df)
-        
-        # compute cosine similarity for find similarity between query and documents and rank them
-        rank_documents = RankSimilarityDocs(self.documents, tfidf_dict_qry, self.df, self.query).compute()
-        print(list(rank_documents))
-
-lexical_measure = LexicalMeasure("Dengan nama Allah yang maha pengasih lagi maha penyayang").execute()
+    # get top similarities with limit = 5 (default), limit is the number of top similarities
+    def get_top_similarities(self, limit = 5):
+        for i, (document_index, similarity) in enumerate(self.similarities[:limit]):
+            self.results.append({
+                "surah_id": self.documents[document_index]["surah_id"],
+                "ayah_arabic": self.documents[document_index]["arabic"],
+                "ayah_translation": self.documents[document_index]["translation"],
+                "number_in_surah": self.documents[document_index]['number']['inSurah'],
+                "tafsir_id": self.documents[document_index]["tafsir"],
+                "similarity_score": similarity,
+                "similarity_percentage": similarity * 100,
+            })
+        return self.results         
