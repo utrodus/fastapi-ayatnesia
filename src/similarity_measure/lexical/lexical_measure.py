@@ -35,13 +35,14 @@ class LexicalMeasure:
     # get top similarities with limit = 5 (default), limit is the number of top similarities
     def get_top_similarities(self, limit = 5):
         for i, (document_index, similarity) in enumerate(self.similarities[:limit]):
+            similarity_percentage = similarity * 100
             self.results.append({
                 "surah_id": self.documents[document_index]["surah_id"],
                 "ayah_arabic": self.documents[document_index]["arabic"],
                 "ayah_translation": self.documents[document_index]["translation"],
                 "number_in_surah": self.documents[document_index]['number']['inSurah'],
                 "tafsir_id": self.documents[document_index]["tafsir"],
-                "similarity_score": similarity,
-                "similarity_percentage": similarity * 100,
+                "similarity_score": f"{similarity:.4f}",
+                "similarity_percentage": f"{similarity_percentage:.2f}%",
             })
         return self.results         
