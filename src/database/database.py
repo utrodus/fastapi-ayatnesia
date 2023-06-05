@@ -1,142 +1,64 @@
-import sqlite3
 import os
-import psutil
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
+from models.surah_ayah_model import Base, Surah, Ayah
 
 current_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
-quran_preprocessed_db_path = os.path.abspath(
+db_file_path = os.path.abspath(
     os.path.join(current_path, "quran.db")
 )
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_file_path}"
 
-# Connect to SQLite database
-conn = sqlite3.connect(quran_preprocessed_db_path)
-c = conn.cursor()
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-# test connection
-def test_connections():
-    for proc in psutil.process_iter():
-        try:
-            files = proc.get_open_files()
-            if files:
-                for _file in files:
-                    if _file.path == quran_preprocessed_db_path:
-                        return True
-        except psutil.NoSuchProcess as err:
-            print(err)
-    return False
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# write quran db
+Base.metadata.create_all(bind=engine)
+db = SessionLocal()
+
+def check_database_connection():
+    try:
+        with engine.connect():
+            pass
+        return True
+    except OperationalError:
+        return False    
+
 def write_quran_db(surahs):
-    # Create the surah table
-    c.execute(
-        """CREATE TABLE surah (
-                id INTEGER PRIMARY KEY,             
-                name TEXT,
-                translation TEXT
-                )"""
-    )
+    for surah in surahs:
+        surah_instance = Surah(name=surah["name"], translation=surah["translation"])
+        db.add(surah_instance)
 
-    # Create the ayahs table
-    c.execute(
-        """CREATE TABLE ayahs (
-                id INTEGER PRIMARY KEY,
-                surah_id INTEGER,
-                numberInQuran INTEGER,
-                numberInSurah INTEGER,
-                arabic TEXT,
-                preprocessed TEXT,
-                translation TEXT,
-                tafsir TEXT,
-                FOREIGN KEY(surah_id) REFERENCES surah(id)
-                )"""
-    )
-
-    # Insert surahs into the surah table and ayahs into the ayahs table
-    for surah in surahs:        
-        surah_values = (            
-            surah["name"],
-            surah["translation"],
-        )
-        c.execute(
-            "INSERT INTO surah (name, translation) VALUES (?, ?)",
-            surah_values,
-        )
-
-        surah_id = surah["number"]
         for ayah in surah["ayahs"]:
-            ayah_values = (
-                surah_id,
-                ayah["number"]["inQuran"],
-                ayah["number"]["inSurah"],
-                ayah["arabic"],
-                ",".join(ayah["preprocced"]),
-                ayah["translation"],
-                ayah["tafsir"],
+            ayah_instance = Ayah(
+                surah_id=surah["number"],
+                numberInQuran=ayah["number"]["inQuran"],
+                numberInSurah=ayah["number"]["inSurah"],
+                arabic=ayah["arabic"],
+                preprocessed=",".join(ayah["preprocced"]),
+                translation=ayah["translation"],
+                tafsir=ayah["tafsir"],
             )
-            c.execute(
-                "INSERT INTO ayahs (surah_id, numberInQuran, numberInSurah, arabic, preprocessed, translation, tafsir) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                ayah_values,
-            )
+            db.add(ayah_instance)
 
-    # Commit the changes
-    conn.commit()
+    db.commit()
 
-    # Close the connection
-    conn.close()
-    
 def get_all_surahs():
-    c.execute("SELECT * FROM surah")
-    all_surahs = c.fetchall()
-    
-    result = []
-    for item in all_surahs:
-        dictionary = {
-            "id": item[0],            
-            "name": item[1],
-            "translation": item[2]
-        }
-        result.append(dictionary)
-    return result    
+    all_surahs = db.query(Surah).all()
 
-# read all ayahs from surah by surah id
+    return [surah.to_dict() for surah in all_surahs]
+
+
 def get_all_ayahs_by_surah_id(surah_id):
-    c.execute("SELECT * FROM ayahs WHERE surah_id = ?", (surah_id,))
-    all_ayahs = c.fetchall()
-    
-    result = []
-    for item in all_ayahs:
-        dictionary = {
-            "id": item[0],
-            "surah_id": item[1],
-            "number": {
-                "inQuran": item[2],
-                "inSurah": item[3]
-            },
-            "arabic": item[4],
-            "preprocessed": item[5].split(","),
-            "translation": item[6],
-            "tafsir": item[7]
-        }
-        result.append(dictionary)
-    return result
+    all_ayahs = db.query(Ayah).filter(Ayah.surah_id == surah_id).all()
 
-# get all ayah
+    return [ayah.to_dict() for ayah in all_ayahs]
+
+
 def get_all_ayahs():
-    c.execute("SELECT * FROM ayahs")
-    all_ayahs = c.fetchall()
-    
-    result = []
-    for item in all_ayahs:
-        dictionary = {
-            "id": item[0],
-            "surah_id": item[1],
-            "number": {
-                "inQuran": item[2],
-                "inSurah": item[3]
-            },
-            "arabic": item[4],
-            "preprocessed": item[5].split(","),
-            "translation": item[6],
-            "tafsir": item[7]
-        }
-        result.append(dictionary)
-    return result
+    all_ayahs = db.query(Ayah).all()
+
+    return [ayah.to_dict() for ayah in all_ayahs]
