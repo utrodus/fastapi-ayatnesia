@@ -1,6 +1,6 @@
 import sys
 sys.path.append("src")
-from models.quran_models import quran_model_from_dict
+from models.quran_model import quran_model_from_dict
 import json
 
 class JSONReader:
