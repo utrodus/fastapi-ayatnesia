@@ -8,7 +8,7 @@ from src.database.database import check_database_connection, get_all_surahs, get
 from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure
-
+from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 
 app = FastAPI()
 app.title = (
@@ -95,7 +95,7 @@ async def get_surah(surah_id: int):
         raise HTTPException(status_code=500, detail="Failed to retrieve surah details. Error: {}".format(str(e)))
 
 @app.post("/search", tags=["3. Search Feature"])
-async def search(query: str, measure_type: str = Query("lexical", title="Measure Type", description="**Measure type** will be used: ( *lexical | semantic | lexical_semantic*)"), limit: int = Query(5, title="Limit", description="**Limit** the number of results returned. Default: 5")):
+async def search(query: str, measure_type: str = Query("lexical", title="Measure Type", description="**Measure type** will be used: ( *lexical | semantic | combination*)"), limit: int = Query(5, title="Limit", description="**Limit** the number of results returned. Default: 5")):
     measure_type =  re.sub(r"\s+", "", measure_type.lower(), flags=re.UNICODE)
     print("measure_type: ", measure_type)
     if(query == ""):
@@ -111,6 +111,11 @@ async def search(query: str, measure_type: str = Query("lexical", title="Measure
             semantic_measure = SemanticMeasure()
             semantic_measure.calculate_semantic_similarity(query_preprocessed)
             results = semantic_measure.get_top_similarities(limit)
+            return results
+        elif(measure_type == "combination"):
+            lexical_semantic_measure = LexicalSemanticMeasure()
+            lexical_semantic_measure.calculate_lexical_semantic_similarity(query_preprocessed)
+            results = lexical_semantic_measure.get_top_similarities(limit)
             return results
         else:
             raise HTTPException(status_code=400, detail="Measure type tidak ditemukan.")

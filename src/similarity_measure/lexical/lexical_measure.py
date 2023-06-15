@@ -26,7 +26,7 @@ class LexicalMeasure:
             similarity = CosineSimilarity.calculate(query_tfidf, document_tfidf)
             self.similarities[i] = similarity
                         
-        self.sort_similarities()
+        return self.similarities
     
     # sort similarities in descending order
     def sort_similarities(self):
@@ -34,6 +34,7 @@ class LexicalMeasure:
         
     # get top similarities with limit = 5 (default), limit is the number of top similarities
     def get_top_similarities(self, limit = 5):
+        self.sort_similarities()        
         for i, (document_index, similarity) in enumerate(self.similarities[:limit]):
             similarity_percentage = similarity * 100
             self.results.append({
