@@ -41,7 +41,7 @@ class LexicalMeasure:
                 "ayah_arabic": self.documents[document_index]["arabic"],
                 "ayah_translation": self.documents[document_index]["translation"],
                 "number_in_surah": self.documents[document_index]['number']['inSurah'],
-                "tafsir_id": self.documents[document_index]["tafsir"],
+                "tafsir": self.documents[document_index]["tafsir"],
                 "similarity_score": f"{similarity:.4f}",
                 "similarity_percentage": f"{similarity_percentage:.2f}%",
             })
