@@ -29,6 +29,7 @@ class Ayah(Base):
     numberInSurah = Column(Integer)
     arabic = Column(String)
     preprocessed = Column(String)
+    word_embedding_result = Column(String)
     translation = Column(String)
     tafsir = Column(String)
 
@@ -44,6 +45,7 @@ class Ayah(Base):
             },
             "arabic": self.arabic,
             "preprocessed": self.preprocessed.split(","),
+            "word_embedding_result": self.word_embedding_result.split(","),
             "translation": self.translation,
             "tafsir": self.tafsir,
         }

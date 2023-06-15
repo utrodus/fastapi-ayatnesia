@@ -46,19 +46,22 @@ def write_quran_db(surahs):
 
     db.commit()
 
+def save_word_embedding_result(ayah_id, result):
+    ayah = db.query(Ayah).filter(Ayah.id == ayah_id).first()
+    print(f"Saving word embedding result for ayah {ayah_id}")
+    ayah.word_embedding_result = ",".join(result)
+    db.commit()    
+
 def get_all_surahs():
     all_surahs = db.query(Surah).all()
-
     return [surah.to_dict() for surah in all_surahs]
 
 
 def get_all_ayahs_by_surah_id(surah_id):
     all_ayahs = db.query(Ayah).filter(Ayah.surah_id == surah_id).all()
-
     return [ayah.to_dict() for ayah in all_ayahs]
 
 
 def get_all_ayahs():
     all_ayahs = db.query(Ayah).all()
-
     return [ayah.to_dict() for ayah in all_ayahs]
