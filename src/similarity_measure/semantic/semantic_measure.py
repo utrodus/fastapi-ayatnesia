@@ -1,6 +1,6 @@
 import sys
 sys.path.append("src")
-from database.database import get_all_ayahs
+from database.database import get_all_ayahs, get_surah_name_by_id
 from similarity_measure.semantic.word_embedding import WordEmbedding
 from similarity_measure.semantic.jaccard_similarity import JaccardSimilarity
 from preprocessing.preprocessing import Preprocessing
@@ -13,8 +13,8 @@ class SemanticMeasure:
         self.nearest_ayahs_words = []
         self.word_embedding = WordEmbedding()
         self.get_doc_nearest_words()
-        self.w_cosine = 0.8 # Bobot untuk cosine similarity
-        self.w_jaccard = 0.2 # Bobot untuk Jaccard similarity
+        self.w_cosine = 0.9 # Bobot untuk cosine similarity
+        self.w_jaccard = 0.1 # Bobot untuk Jaccard similarity
 
     def sort_documents(self):
         self.similarities = sorted(self.similarities.items(), key=lambda x: x[1], reverse=True)
@@ -39,6 +39,7 @@ class SemanticMeasure:
             similarity_percentage = similarity * 100
             self.results.append({
                 "surah_id": self.documents[document_index]["surah_id"],
+                "surah_name": get_surah_name_by_id(self.documents[document_index]["surah_id"]),
                 "ayah_arabic": self.documents[document_index]["arabic"],
                 "ayah_translation": self.documents[document_index]["translation"],
                 "number_in_surah": self.documents[document_index]['number']['inSurah'],

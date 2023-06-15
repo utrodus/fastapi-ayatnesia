@@ -1,6 +1,6 @@
 import sys
 sys.path.append("src")
-from database.database import get_all_ayahs
+from database.database import get_all_ayahs, get_surah_name_by_id
 from similarity_measure.lexical.tf_idf import TFIDF
 from similarity_measure.lexical.cosine_similarity import CosineSimilarity
 
@@ -38,6 +38,7 @@ class LexicalMeasure:
             similarity_percentage = similarity * 100
             self.results.append({
                 "surah_id": self.documents[document_index]["surah_id"],
+                "surah_name": get_surah_name_by_id(self.documents[document_index]["surah_id"]),
                 "ayah_arabic": self.documents[document_index]["arabic"],
                 "ayah_translation": self.documents[document_index]["translation"],
                 "number_in_surah": self.documents[document_index]['number']['inSurah'],
