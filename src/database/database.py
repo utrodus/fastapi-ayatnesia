@@ -59,7 +59,18 @@ def get_all_surahs():
 
 def get_all_ayahs_by_surah_id(surah_id):
     all_ayahs = db.query(Ayah).filter(Ayah.surah_id == surah_id).all()
-    return [ayah.to_dict() for ayah in all_ayahs]
+    return [
+        {
+            "id": ayah.id,
+            "surah_id": ayah.surah_id,
+            "number_in_Quran": ayah.numberInQuran,
+            "number_in_surah": ayah.numberInSurah,
+            "arabic": ayah.arabic,
+            "translation": ayah.translation,
+            "tafsir": ayah.tafsir
+        }
+        for ayah in all_ayahs
+    ]
 
 
 def get_all_ayahs():
