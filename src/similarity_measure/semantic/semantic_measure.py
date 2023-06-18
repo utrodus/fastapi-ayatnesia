@@ -36,11 +36,12 @@ class SemanticMeasure:
                     
         return self.similarities
     
-    def get_top_similarities(self, limit=5):
-        self.sort_documents()        
-        for i, (document_index, similarity) in enumerate(self.similarities[:limit]):
+    def get_top_similarities(self, top_relevance):
+        self.sort_documents()
+        self.results = []
+        def transform_similarity(document_index, similarity):
             similarity_percentage = similarity * 100
-            self.results.append({
+            return {
                 "surah_id": self.documents[document_index]["surah_id"],
                 "surah_name": get_surah_name_by_id(self.documents[document_index]["surah_id"]),
                 "ayah_arabic": self.documents[document_index]["arabic"],
@@ -48,8 +49,19 @@ class SemanticMeasure:
                 "number_in_surah": self.documents[document_index]['number']['inSurah'],
                 "tafsir": self.documents[document_index]["tafsir"],
                 "similarity_score": f"{similarity:.4f}",
-                "similarity_percentage": f"{similarity_percentage:.2f}%"
-            })
+                "similarity_percentage": f"{similarity_percentage:.2f}%",
+            }
+
+        if top_relevance == "all":
+            self.results = list(
+                map(transform_similarity, *zip(*self.similarities))
+            )
+        else:
+            top_relevance = int(top_relevance)
+            self.results = list(
+                map(transform_similarity, *zip(*self.similarities[:top_relevance]))
+            )
+                        
         return self.results
 
 # query = "Dengan Menyebut Nama Allah Yang Maha Pengasih Lagi Maha Penyayang"

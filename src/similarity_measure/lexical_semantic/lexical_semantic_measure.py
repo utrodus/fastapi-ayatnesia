@@ -29,11 +29,12 @@ class LexicalSemanticMeasure:
         for i in range(len(self.documents)):
             self.combined_similarity[i] = (lexical_similarity[i] + semantic_similarity[i]) / 2
     
-    def get_top_similarities(self, limit = 5):
-        self.sort_similarities()        
-        for i, (document_index, similarity) in enumerate(self.combined_similarity[:limit]):
+    def get_top_similarities(self, top_relevance):
+        self.sort_similarities()
+        self.results = []
+        def transform_similarity(document_index, similarity):
             similarity_percentage = similarity * 100
-            self.results.append({
+            return {
                 "surah_id": self.documents[document_index]["surah_id"],
                 "surah_name": get_surah_name_by_id(self.documents[document_index]["surah_id"]),
                 "ayah_arabic": self.documents[document_index]["arabic"],
@@ -42,7 +43,18 @@ class LexicalSemanticMeasure:
                 "tafsir": self.documents[document_index]["tafsir"],
                 "similarity_score": f"{similarity:.4f}",
                 "similarity_percentage": f"{similarity_percentage:.2f}%",
-            })
+            }
+
+        if top_relevance == "all":
+            self.results = list(
+                map(transform_similarity, *zip(*self.combined_similarity))
+            )
+        else:
+            top_relevance = int(top_relevance)
+            self.results = list(
+                map(transform_similarity, *zip(*self.combined_similarity[:top_relevance]))
+            )
+                                  
         return self.results 
                         
     

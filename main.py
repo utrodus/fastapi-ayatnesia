@@ -95,7 +95,11 @@ async def get_surah(surah_id: int):
         raise HTTPException(status_code=500, detail="Failed to retrieve surah details. Error: {}".format(str(e)))
 
 @app.post("/search", tags=["3. Search Feature"])
-async def search(query: str, measure_type: str = Query("lexical", title="Measure Type", description="**Measure type** will be used: ( *lexical | semantic | combination*)"), limit: int = Query(5, title="Limit", description="**Limit** the number of results returned. Default: 5")):
+async def search(query: str, 
+                 measure_type: str = Query("combination", title="Measure Type", description="**Measure type** will be used: ( *lexical | semantic | combination*)"), 
+                 top_relevance = Query("all", title="Top Relevance", description="**Filter Top Relevance:** the number of results returned (all | 5 | 10 | 15)"),
+                 ):
+                 
     measure_type =  re.sub(r"\s+", "", measure_type.lower(), flags=re.UNICODE)
     print("measure_type: ", measure_type)
     if(query == ""):
@@ -105,17 +109,17 @@ async def search(query: str, measure_type: str = Query("lexical", title="Measure
         if(measure_type == "lexical"):
             lexical_measure = LexicalMeasure()
             lexical_measure.calculate_lexical_similarity(query_preprocessed)
-            results = lexical_measure.get_top_similarities(limit)
+            results = lexical_measure.get_top_similarities(top_relevance)
             return results
         elif(measure_type == "semantic"):
             semantic_measure = SemanticMeasure()
             semantic_measure.calculate_semantic_similarity(query_preprocessed)
-            results = semantic_measure.get_top_similarities(limit)
+            results = semantic_measure.get_top_similarities(top_relevance)
             return results
         elif(measure_type == "combination"):
             lexical_semantic_measure = LexicalSemanticMeasure()
             lexical_semantic_measure.calculate_lexical_semantic_similarity(query_preprocessed)
-            results = lexical_semantic_measure.get_top_similarities(limit)
+            results = lexical_semantic_measure.get_top_similarities(top_relevance)
             return results
         else:
             raise HTTPException(status_code=400, detail="Measure type tidak ditemukan.")
