@@ -29,7 +29,7 @@ def check_database_connection():
 
 def write_quran_db(surahs):
     for surah in surahs:
-        surah_instance = Surah(name=surah["name"], translation=surah["translation"])
+        surah_instance = Surah(name=surah["name"], translation=surah["translation"], revelation=surah["revelation"], numberOfAyahs=surah["numberOfAyahs"])
         db.add(surah_instance)
 
         for ayah in surah["ayahs"]:
@@ -39,19 +39,14 @@ def write_quran_db(surahs):
                 numberInSurah=ayah["number"]["inSurah"],
                 arabic=ayah["arabic"],
                 preprocessed=",".join(ayah["preprocced"]),
+                tafsir_preprocessed=",".join(ayah["tafsir_preprocessed"]),
                 translation=ayah["translation"],
                 tafsir=ayah["tafsir"],
             )
             db.add(ayah_instance)
 
     db.commit()
-
-def save_word_embedding_result(ayah_id, result):
-    ayah = db.query(Ayah).filter(Ayah.id == ayah_id).first()
-    print(f"Saving word embedding result for ayah {ayah_id}")
-    ayah.word_embedding_result = ",".join(result)
-    db.commit()    
-
+    
 def get_all_surahs():
     all_surahs = db.query(Surah).all()
     return [surah.to_dict() for surah in all_surahs]
@@ -63,7 +58,7 @@ def get_all_ayahs_by_surah_id(surah_id):
         {
             "id": ayah.id,
             "surah_id": ayah.surah_id,
-            "number_in_Quran": ayah.numberInQuran,
+            "number_in_quran": ayah.numberInQuran,
             "number_in_surah": ayah.numberInSurah,
             "arabic": ayah.arabic,
             "translation": ayah.translation,
