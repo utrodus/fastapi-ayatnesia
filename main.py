@@ -7,7 +7,7 @@ sys.path.append("src")
 from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id
 from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
-from src.similarity_measure.semantic.semantic_measure import SemanticMeasure
+from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 
 app = FastAPI()
@@ -34,6 +34,15 @@ It provides an efficient way to access and retrieve information from the Quran.
 )
 app.version = "0.0.1"
 app.debug = True
+
+# initialize lexical measure
+# lexical_measure = LexicalMeasure()
+
+# initialize semantic measure
+# semantic_measure = SemanticMeasure()
+
+# initialize lexical semantic measure
+# lexical_semantic_measure = LexicalSemanticMeasure()
 
 
 @app.get("/", tags=["Welcome sections"], response_class=HTMLResponse)
@@ -93,6 +102,8 @@ async def get_surah(surah_id: int):
         return ayahs
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to retrieve surah details. Error: {}".format(str(e)))
+    
+
 
 @app.post("/search", tags=["3. Search Feature"])
 async def search(query: str, 
@@ -106,6 +117,7 @@ async def search(query: str,
         raise HTTPException(status_code=400, detail="Kata kunci tidak boleh kosong.")
     else:
         query_preprocessed = Preprocessing(query).execute()
+        
         if(measure_type == "lexical"):
             lexical_measure = LexicalMeasure()
             lexical_measure.calculate_lexical_similarity(query_preprocessed)
@@ -113,9 +125,10 @@ async def search(query: str,
             return results
         elif(measure_type == "semantic"):
             semantic_measure = SemanticMeasure()
-            semantic_measure.calculate_semantic_similarity(query_preprocessed)
-            results = semantic_measure.get_top_similarities(top_relevance)
-            return results
+            results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+            return {
+                "results": results
+            }
         elif(measure_type == "combination"):
             lexical_semantic_measure = LexicalSemanticMeasure()
             lexical_semantic_measure.calculate_lexical_semantic_similarity(query_preprocessed)
