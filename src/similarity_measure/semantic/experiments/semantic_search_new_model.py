@@ -71,57 +71,60 @@ model_path = 'fasttext_quran_model.bin'
 current_directory = os.path.dirname(__file__)
 trained_model_path = os.path.abspath(os.path.join(current_directory, '../trained_model/fasttext_quran_model.bin'))
 model = FastText.load(trained_model_path)
+similar_words = model.wv.most_similar('hewan')
 
-# Function to calculate cosine similarity between query and document vectors
-def calculate_similarity(query, document):
-    query_vector = np.mean([model.wv.get_vector(token) for token in query], axis=0)
-    document_vector = np.mean([model.wv.get_vector(token) for token in document], axis=0)
+print(similar_words)
 
-    dot_product = np.dot(query_vector, document_vector)
-    query_norm = np.linalg.norm(query_vector)
-    document_norm = np.linalg.norm(document_vector)
+# # Function to calculate cosine similarity between query and document vectors
+# def calculate_similarity(query, document):
+#     query_vector = np.mean([model.wv.get_vector(token) for token in query], axis=0)
+#     document_vector = np.mean([model.wv.get_vector(token) for token in document], axis=0)
 
-    similarity = dot_product / (query_norm * document_norm)
-    return similarity
+#     dot_product = np.dot(query_vector, document_vector)
+#     query_norm = np.linalg.norm(query_vector)
+#     document_norm = np.linalg.norm(document_vector)
 
-# Function to search for most relevant ayahs with the given query
-def search_ayah(query):
-    ayahs = get_all_ayahs()  # Replace with a function that retrieves ayahs from the database
+#     similarity = dot_product / (query_norm * document_norm)
+#     return similarity
 
-    results = []
-    for ayah in ayahs:
-        similarity = calculate_similarity(query, ayah['preprocessed'])
-        results.append({
-            'ayah_id': ayah['id'],
-            'similarity': similarity,
-            'arabic_ayah': ayah['arabic'],
-            'translation_ayah': ayah['translation']
-        })
+# # Function to search for most relevant ayahs with the given query
+# def search_ayah(query):
+#     ayahs = get_all_ayahs()  # Replace with a function that retrieves ayahs from the database
 
-    results = sorted(results, key=lambda x: x['similarity'], reverse=True)
-    return results
+#     results = []
+#     for ayah in ayahs:
+#         similarity = calculate_similarity(query, ayah['preprocessed'])
+#         results.append({
+#             'ayah_id': ayah['id'],
+#             'similarity': similarity,
+#             'arabic_ayah': ayah['arabic'],
+#             'translation_ayah': ayah['translation']
+#         })
 
-# Function to get the top results as a list of dictionaries
-def get_top_results(query, num_results=10):
-    results = search_ayah(query)
-    top_results = results[:num_results]
-    return top_results
+#     results = sorted(results, key=lambda x: x['similarity'], reverse=True)
+#     return results
 
-start = time.time()
+# # Function to get the top results as a list of dictionaries
+# def get_top_results(query, num_results=10):
+#     results = search_ayah(query)
+#     top_results = results[:num_results]
+#     return top_results
 
-# Example usage
-query = ['istimewa', 'hewan', 'ternak', 'alquran']
-top_results = get_top_results(query)
+# start = time.time()
 
-for result in top_results:
-    ayah_id = result['ayah_id']
-    similarity = result['similarity']
-    arabic_ayah = result['arabic_ayah']
-    translation_ayah = result['translation_ayah']
-    print(f"Ayat ID: {ayah_id}, Similarity: {similarity}")
-    print(f"Arabic Ayah: {arabic_ayah}")
-    print(f"Translation: {translation_ayah}")
-    print()
+# # Example usage
+# query = ['istimewa', 'hewan', 'ternak', 'alquran']
+# top_results = get_top_results(query)
 
-end = time.time()
-print(f'Finished in {end - start} seconds')
+# for result in top_results:
+#     ayah_id = result['ayah_id']
+#     similarity = result['similarity']
+#     arabic_ayah = result['arabic_ayah']
+#     translation_ayah = result['translation_ayah']
+#     print(f"Ayat ID: {ayah_id}, Similarity: {similarity}")
+#     print(f"Arabic Ayah: {arabic_ayah}")
+#     print(f"Translation: {translation_ayah}")
+#     print()
+
+# end = time.time()
+# print(f'Finished in {end - start} seconds')

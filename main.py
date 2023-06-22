@@ -1,10 +1,9 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import HTMLResponse
 import re
-
 import sys
 sys.path.append("src")
-from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id
+from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
 from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
@@ -35,15 +34,21 @@ It provides an efficient way to access and retrieve information from the Quran.
 app.version = "0.0.1"
 app.debug = True
 
+
+# get all ayahs from database
+all_ayahs = get_all_ayahs()
+# get all surahs from database
+all_surah = get_all_surahs()
+
 # initialize lexical measure
-# lexical_measure = LexicalMeasure()
+lexical_measure = LexicalMeasure(all_ayahs=all_ayahs)
 
 # initialize semantic measure
-# semantic_measure = SemanticMeasure()
+word_embedding = WordEmbedding()
+semantic_measure = SemanticMeasure(word_embedding=word_embedding, all_ayahs=all_ayahs)
 
 # initialize lexical semantic measure
-# lexical_semantic_measure = LexicalSemanticMeasure()
-
+lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_measure=lexical_measure, semantic_measure=semantic_measure)
 
 @app.get("/", tags=["Welcome sections"], response_class=HTMLResponse)
 def root():
@@ -89,8 +94,7 @@ async def test_connections():
 
 @app.get("/all-surahs",  tags=["2. Get Surahs And Detail"])
 async def get_list_surah():
-    try:
-        all_surah = get_all_surahs()
+    try:        
         return all_surah
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to retrieve surahs. Error: {}".format(str(e)))
@@ -112,27 +116,21 @@ async def search(query: str,
                  ):
                  
     measure_type =  re.sub(r"\s+", "", measure_type.lower(), flags=re.UNICODE)
-    print("measure_type: ", measure_type)
     if(query == ""):
         raise HTTPException(status_code=400, detail="Kata kunci tidak boleh kosong.")
     else:
         query_preprocessed = Preprocessing(query).execute()
         
         if(measure_type == "lexical"):
-            lexical_measure = LexicalMeasure()
-            lexical_measure.calculate_lexical_similarity(query_preprocessed)
-            results = lexical_measure.get_top_similarities(top_relevance)
+            results = lexical_measure.get_top_similarities(query_preprocessed,top_relevance)
             return results
         elif(measure_type == "semantic"):
-            semantic_measure = SemanticMeasure()
             results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
             return {
                 "results": results
             }
         elif(measure_type == "combination"):
-            lexical_semantic_measure = LexicalSemanticMeasure()
-            lexical_semantic_measure.calculate_lexical_semantic_similarity(query_preprocessed)
-            results = lexical_semantic_measure.get_top_similarities(top_relevance)
+            results = lexical_semantic_measure.get_top_similarities(query_preprocessed,top_relevance)
             return results
         else:
             raise HTTPException(status_code=400, detail="Measure type tidak ditemukan.")
