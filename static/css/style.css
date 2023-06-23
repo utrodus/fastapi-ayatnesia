@@ -300,7 +300,8 @@ header img {
 	border-radius: 12px;
 	border: none;
 }
-.modal .modal-content h5{
+
+.modal .modal-content h5 {
 	text-align: center !important;
 }
 
@@ -676,6 +677,27 @@ ul.social-network li {
 	text-decoration: none;
 	background-color: #fbfbfb;
 	color: #17a2b8;
+}
+
+#scroll-top-btn {
+	display: none;
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+	min-width: 44px;
+	min-height: 44px;
+	background-color: #3c8285;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	font-size: 20px;
+	border-radius: 6px;
+	z-index: 9999;
+	cursor: pointer;
+}
+
+#scroll-top-btn:hover {
+	background-color: #2f6264;
 }
 
 /* Media Query */

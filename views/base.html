@@ -31,12 +31,13 @@
    </header>
    <div id="wrapper">
       <aside id="sidebar-wrapper">
-         <ul class="sidebar-nav">
-            <li >
+         <ul class="sidebar-nav" id="surah-list">
+
+            <li {% if request.path=="/" %}class="active" {% endif %}>
                <a href="/">Beranda</a>
             </li>
-            <li>
-               <a href="/search"> Cari Ayat</a>
+            <li {% if request.path=="/search" %}class="active" {% endif %}>
+               <a href="/search">Cari Ayat</a>
             </li>
             <li>
                <a href="/docs" target="_blank"> Dokumentasi API</a>
@@ -48,16 +49,34 @@
 
             <li>
                <div class="input-group mt-2 mb-3">
-                  <input type="text" class="form-control" placeholder="Cari Surah Al Qur'an">
+                  <input type="text" class="form-control" placeholder="Cari Surah Al Qur'an" id="search-input">
                </div>
             </li>
-            {% block list_surahs %}
-            {% endblock list_surahs %}
+
+
+            {% for surah in all_surahs %}
+            <li class="surah-item {% if surah['id'] == current_path_id %}active{% endif %}">
+               <a href="/detail-surah/{{ surah['id'] }}">{{ surah['id'] }} - {{ surah['name'] }}</a>
+            </li>
+            {% endfor %}
+
+
+
+            <!-- {% for surah in all_surahs %}
+            <li x-data="{ isActive: '{{ surah['id'] }}' === '{{ request.url.path.split(" /")[2] }}' }"
+               :class="{ 'active': isActive }">
+               <a href="/detail-surah/{{ surah['id'] }}">{{ surah['id'] }} - {{ surah['name'] }}</a>
+            </li>
+            {% endfor %} -->
+
+
          </ul>
       </aside>
       {% block content %}
       {% endblock content %}
    </div>
+
+
    <!-- Footer -->
    <footer>
       <div class="container">
@@ -67,13 +86,15 @@
                   <script>
                      document.write(new Date().getFullYear())
                   </script>
+
                   - Crafted by <a href="https://utrodus.my.id/" target="_blank"> <b> Utrodus Said Al Baqi</b></a>
+
                </p>
             </div>
          </div>
       </div>
    </footer>
-  
+
    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
    <script src="{{ url_for('static', path='js/jquery-3.4.1.slim.min.js') }} "></script>
    <script src="{{ url_for('static', path='js/popper.min.js') }} "></script>
@@ -97,11 +118,49 @@
    </script>
    <script>
       $(document).ready(function () {
+         let currentPath = '{{ request.url.path.split("/")[2] }}';
+
          $("#close").click(function () {
             $("#wrapper").removeClass('toggled');
          });
+
+         $('.surah-item').each(function () {
+            let surahId = $(this).find('a').attr('href').split('/')[2];
+
+            if (surahId === currentPath) {
+               $(this).addClass('active');
+            } else {
+               $(this).removeClass('active');
+            }
+         });
+
+         $('#search-input').on('input', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            $('#surah-list li.surah-item').each(function () {
+               var surahName = $(this).text().toLowerCase();
+               $(this).toggle(surahName.indexOf(searchTerm) > -1);
+            });
+         });
+
+         // Scroll to top button
+         // Scroll to top button
+         var $scrollTopBtn = $('#scroll-top-btn');
+
+         $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+               $scrollTopBtn.fadeIn();
+            } else {
+               $scrollTopBtn.fadeOut();
+            }
+         });
+
+         $scrollTopBtn.click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+         });
       });
    </script>
+
    <script>
       $('#search').owlCarousel({
          loop: true,
@@ -139,6 +198,10 @@
       });
 
    </script>
+   <a href="#" id="scroll-top-btn">
+      <img src="{{ url_for('static', path='images/icon-chevron-up.svg') }} " alt="">
+   </a>
+
 </body>
 
 </html>

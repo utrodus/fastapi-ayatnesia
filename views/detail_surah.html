@@ -1,13 +1,5 @@
 {% extends 'base.html' %}
 
-{% block list_surahs %}
-{% for surah in all_surahs %}
-
-<li x-data="navigation()" :class="{ 'active': isActive('/') }">
-    <a href="/detail-surah/{{surah['id']}}"> {{ surah['id']}} - {{ surah['name']}}</a>
-</li>
-{% endfor %}
-{% endblock list_surahs %}
 
 {% block content %}
 <section id="content-wrapper" class="user-dashboard faq-section">
