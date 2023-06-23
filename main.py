@@ -13,7 +13,7 @@ from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, Wo
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="views")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
