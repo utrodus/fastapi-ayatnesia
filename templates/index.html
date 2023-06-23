@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block list_surahs %}
+{% for surah in all_surahs %}
+<li>
+    <a href="/detail-surah/{{surah['id']}}">{{ surah['id']}} - {{ surah['name']}}</a>
+</li>
+{% endfor %}
+{% endblock list_surahs %}
+
+{% block content %}
+
+<section id="content-wrapper" class="user-dashboard">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card search-engine">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h4>Selamat datang di AyatNesia</h4>
+                            <p>Ayatnesia Ialah Aplikasi Untuk Melakukan Riset Pencarian Relevansi Terjemahan Ayat Al
+                                Qur'an Bahasa Indonesia Menggunakan Metode Pengukuran Kemiripan Leksikal Dan Semantik.
+                            </p>
+
+                            <p>
+                                Data yang digunakan berasal dari situs resmi Kementerian Agama Republik Indonesia
+                                <a href="https://quran.kemenag.go.id/" target=”_blank”>
+                                    (quran.kemenag.go.id)</a>
+                            </p>
+                            <p>Anda juga dapat mengintegrasikan AyatNesia API ke dalam aplikasi web, aplikasi seluler,
+                                atau proyek pengembangan lainnya. Untuk informasi lebih lanjut tentang cara
+                                mengintegrasikan API ini, <br>
+                                Silakan lihat dokumentasi API kami di halaman
+                                <a href="/docs">
+                                    <b>
+                                        /docs
+                                    </b>
+                                </a>
+                            </p>
+                            <button class="btn btn-info" type="button"><a href="search-results.html">Cari Ayat Al
+                                    Qur'an</a></button>
+                        </div>
+                        <div class="col-md-6 text-md-right">
+                            <img class="img-fluid mt-4 mt-md-0"
+                                src="{{ url_for('static', path='images/quran.webp') }}  " alt="quran">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="search" class="search-block owl-carousel">
+                <div class="item">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ url_for('static', path='images/icon-list-quran.png') }} "
+                                alt="icon-list-quran">
+                            <h6>Akses ke Seluruh Surah Al-Qur'an</h6>
+                            <p> Daftar lengkap Surah Al-Qur'an dengan nomor ayat, nama Surah, jumlah ayat, tafsir ayat,
+                                terjemah ayat berdasarkan sumber data Al Qur'an Kemenag RI.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ url_for('static', path='images/icon-lexical-search.png') }} "
+                                alt="icon-lexical-search">
+
+                            <h6>Pencarian Leksikal</h6>
+                            <p>Cari ayat-ayat Al-Qur'an berdasarkan kata kunci atau frasa menggunakan TF-IDF dan cosine
+                                similarity. Temukan ayat-ayat dengan kata-kata atau frasa yang spesifik.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ url_for('static', path='images/icon-semantic-search.png') }} "
+                                alt="icon-semantic-search">
+
+                            <h6>Pencarian Semantik</h6>
+                            <p>Cari ayat-ayat berdasarkan makna kata dengan word embedding menggunakan model FastText.
+                                Temukan ayat-ayat yang terkait secara semantik dengan kata kunci.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ url_for('static', path='images/icon-combination-search.png') }} "
+                                alt="icon-combination-search">
+                            <h6>Pencarian Leksikal Semantik</h6>
+                            <p>Gabungan dari pencarian leksikal dan semantik. Cari ayat-ayat dengan kombinasi kata kunci
+                                leksikal dan makna semantik.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ url_for('static', path='images/icon-developer.png') }}" alt="icon-developer">
+                            <h6>Pengembang Aplikasi</h6>
+                            <p>AyatNesia dikembangkan oleh Utrodus Said Al Baqi, Mahasiswa Program Studi Ilmu Komputer,
+                                Universitas Nahdlatul Ulama Blitar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

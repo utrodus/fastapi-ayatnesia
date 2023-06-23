@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block list_surahs %}
+{% for surah in all_surahs %}
+
+<li x-data="navigation()" :class="{ 'active': isActive('/') }">
+    <a href="/detail-surah/{{surah['id']}}"> {{ surah['id']}} - {{ surah['name']}}</a>
+</li>
+{% endfor %}
+{% endblock list_surahs %}
+
+{% block content %}
+<section id="content-wrapper" class="user-dashboard faq-section">
+    <div class="row align-items-center mb-3 ">
+        <div class="col-md-8  ">
+            <form action="/search-result">
+                <div class="input-group">
+
+                    <input type="text" class="form-control" ame="query" id="query" x-model="selectedOptionValue"
+                        required
+                        style="border-top-left-radius: 12px; border-bottom-left-radius: 12px; height: 2.5rem; font-size: 0.9em;"
+                        placeholder="Masukkan Kata Kunci Bahasa Indonesia Untuk Mencari Ayat Al Qur'an"
+                        aria-label="Masukkan Kata Kunci Bahasa Indonesia Untuk Mencari Ayat Al Qur'an">
+
+                    <div x-data="dropdown()" class="input-group-append">
+                        <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            style="font-size: 0.8em; font-weight: bold; border-top-right-radius: 12px; border-bottom-right-radius: 12px;"
+                            x-text="selectedOptionLabel"></button>
+                        <div class="dropdown-menu">
+                            <template x-for="option in options" :key="option.id">
+                                <a href="#" class="dropdown-item" x-text="option.label"
+                                    x-on:click="selectOption(option)"></a>
+                            </template>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- </form> -->
+        </div>
+
+
+        <div class="col-sm-8 col-md-2">
+            <div class="input-group-btn" style="display: inline-block;">
+                <button class="btn btn-primary d-flex align-items-center" href="search-results.html" style="min-width: 40px;
+             min-height: 40px;">
+                    <img src="{{ url_for('static', path='images/icon-search.svg') }}" alt="icon-search"
+                        style="max-width: 1.5em;" />
+                    <p style="margin: 0;margin-left: 0.5em;">Cari Ayat</p>
+                    </i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <img src="{{ url_for('static', path='images/img-quran-search.png') }} " alt="img-search"
+                style="width: 20rem; display: block; margin-top: 8rem !important;" class="mx-auto ">
+            <h5 class="text-center mt-5"> Cari Ayat Al Qur'an Dengan AyatNesia </h5 class="text-center mt-5">
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="col-sm-8 col-md-6">
+            <div class="card box-shadow-none mb-3">
+                <div class="card-body py-2">
+                    <p class="mb-0">105 search results for <span class="text-warning">"christian"</span></p>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="row arabic-block mt-3">
+        <div class="col-md-12">
+            <div class="accordion" id="faq">
+                <div class="card">
+                    <div class="card-header" id="faqhead1">
+                        <a href="#" class="btn btn-header-link collapsed d-flex" data-toggle="collapse"
+                            data-target="#faq1" aria-expanded="false" aria-controls="faq1"
+                            style="justify-content: space-between;">
+                            <div>
+                                Al-Baqara - Verse 111 <br />
+                                <small>Skor Kemiripan Leksikal & Semantik: 0.98 (98%)</small>
+                            </div>
+                            <img src="assets/images/icon-chevron-down.svg" alt="icon-chevron-down">
+
+                        </a>
+
+                    </div>
+
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="number">123</span>
+                            <div class="media-body">
+                                <h5 class="mt-0"> بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ المر ۚ تِلْكَ آيَاتُ
+                                    الْكِتَابِ ۗ وَالَّذِي أُنْزِلَ إِلَيْكَ مِنْ رَبِّكَ الْحَقُّ وَلَٰكِنَّ أَكْثَرَ
+                                    النَّاسِ لَا يُؤْمِنُونَ </h5>
+                                <p class="mb-0 mt-3"> <b> Artinya:</b> A.L.M.R. These are the signs (or verses) of the
+                                    Book: that which hath been
+                                    revealed unto thee from thy Lord is the Truth; but most men believe not</p>
+                            </div>
+                        </div>
+                        <div id="faq1" class="collapse mt-4" aria-labelledby="faqhead1" data-parent="#faq">
+                            <div class="media">
+                                <span class="tafsir"></span>
+                                <div class="media-body">
+                                    <p class="mb-0"><b>Tafsir :</b> Pada ayat di atas, Allah memulai firman-Nya dengan
+                                        menyebut “Basmalah” untuk mengajarkan kepada hamba-Nya agar memulai suatu
+                                        perbuatan
+                                        yang baik dengan menyebut basmalah, sebagai pernyataan bahwa dia mengerjakan
+                                        perbuatan itu karena Allah dan kepada-Nyalah dia memohonkan pertolongan dan
+                                        berkah.
+                                        Maka, pada ayat ini Allah mengajarkan kepada hamba-Nya agar selalu memuji-Nya.
+                                        Al-ḥamdu artinya pujian, karena kebaikan yang diberikan oleh yang dipuji, atau
+                                        karena suatu sifat keutamaan yang dimilikinya. Semua nikmat yang telah dirasakan
+                                        dan
+                                        didapat di alam ini dari Allah, sebab Dialah yang menjadi sumber bagi semua
+                                        nikmat.
+                                        Hanya Allah yang mempunyai sifat-sifat kesempurnaan. Karena itu Allah sajalah
+                                        yang
+                                        berhak dipuji. Orang yang menyebut al-ḥamdu lillāh bukan hanya mengakui bahwa
+                                        puji
+                                        itu untuk Allah semata, melainkan dengan ucapannya itu dia memuji Allah.
+                                        Rabb artinya pemilik, pengelola dan pemelihara. Di dalamnya terkandung arti
+                                        mendidik, yaitu menyampaikan sesuatu kepada keadaan yang sempurna dengan
+                                        berangsur-angsur.
+                                        ‘Ālamīn artinya seluruh alam, yakni semua jenis makhluk. Alam itu
+                                        berjenis-jenis,
+                                        yaitu alam tumbuh-tumbuhan, alam binatang, alam manusia, alam benda, alam
+                                        makhluk
+                                        halus, umpamanya malaikat, jin, dan alam yang lain. Ada mufasir mengkhususkan
+                                        ‘ālamīn pada ayat ini kepada makhluk-makhluk Allah yang berakal yaitu manusia,
+                                        malaikat dan jin. Tetapi ini mempersempit arti kata yang sebenarnya amat luas.
+                                        Dengan demikian, Allah itu Pendidik seluruh alam, tak ada sesuatu pun dari
+                                        makhluk
+                                        Allah yang terlepas dari didikan-Nya. Tuhan mendidik makhluk-Nya de-ngan seluas
+                                        arti
+                                        kata itu. Sebagai pendidik, Dia menumbuhkan, menjaga, mem-berikan daya (tenaga)
+                                        dan
+                                        senjata kepada makhluk itu, guna kesempurnaan hidupnya masing-masing.
+                                        Siapa yang memperhatikan perjalanan bintang-bintang, menyelidiki kehi-dupan
+                                        tumbuh-tumbuhan dan binatang di laut dan di darat, mempelajari per-tumbuhan
+                                        manusia
+                                        sejak dari rahim ibunya sampai ke masa kanak-kanak, lalu menjadi manusia yang
+                                        sempurna, tahulah dia bahwa tidak ada sesuatu juga dari makhluk Allah yang
+                                        terlepas
+                                        dari penjagaan, pemeliharaan, asuhan dan inayah-Nya.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+              
+            </div>
+        </div>
+    </div> -->
+</section>
+<script>
+    const dropdown = () => {
+        const options = [
+            { id: 1, label: 'Leksikal', value: 'lexical' },
+            { id: 2, label: 'Semantik', value: 'semantic' },
+            { id: 3, label: 'Leksikal & Semantik', value: 'combination' },
+        ];
+
+        const defaultOption = options.find(option => option.id === 3);
+
+        return {
+            options,
+            selectedOption: defaultOption,
+            get selectedOptionLabel() {
+                return this.selectedOption ? this.selectedOption.label : 'Select an option';
+            },
+            selectOption(option) {
+                this.selectedOption = option;
+            }
+        };
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        Alpine.data('dropdown', dropdown);
+    });
+</script>
+{% endblock content %}

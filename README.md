@@ -76,10 +76,4 @@ first off all, run preprocessing quran data for preprocessing ayahs for each sur
 $ python src/preprocessing/quran_preprocessing.py
 ```
 
-then uncomment end of code in word_embedding.py file for run the script for word embedding quran ayahs and save the result to database
-
-```git bash
-$ python src/similarity_measure/semantic/word_embedding.py
-```
-
 Once you are running the server open the [Swagger UI App](http://localhost:8000/docs) to checkout the API documentation.

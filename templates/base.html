@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Favicon -->
+   <link href="{{ url_for('static', path='images/favicon.png') }} " sizes="60x60" rel="shortcut icon"
+      type="image/x-icon" />
+   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="{{ url_for('static', path='css/bootstrap.min.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', path='css/owl.carousel.min.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+
+   <title>AyatNesia - Pencarian Relevansi Text Terjemahan Ayat Al Qur'an</title>
+</head>
+
+<body>
+   <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+         <a class="navbar-brand" href="/">
+            <img src="{{ url_for('static', path='images/logo.webp') }} " alt="logo">
+         </a>
+         <a href="javascript:void(0)" class="ml-auto d-md-none" id="sidebar-toggle">
+            <img src="{{ url_for('static', path='images/icon-menu-hamburger.svg') }} " alt="icon-menu-hamburger"
+               style="max-width: 1.5em;">
+            </i></a>
+      </nav>
+   </header>
+   <div id="wrapper">
+      <aside id="sidebar-wrapper">
+         <ul class="sidebar-nav">
+            <li >
+               <a href="/">Beranda</a>
+            </li>
+            <li>
+               <a href="/search"> Cari Ayat</a>
+            </li>
+            <li>
+               <a href="/docs" target="_blank"> Dokumentasi API</a>
+            </li>
+
+            <li>
+               <a href="https://www.utrodus.my.id/" target="_blank"> Kontak Kami</a>
+            </li>
+
+            <li>
+               <div class="input-group mt-2 mb-3">
+                  <input type="text" class="form-control" placeholder="Cari Surah Al Qur'an">
+               </div>
+            </li>
+            {% block list_surahs %}
+            {% endblock list_surahs %}
+         </ul>
+      </aside>
+      {% block content %}
+      {% endblock content %}
+   </div>
+   <!-- Footer -->
+   <footer>
+      <div class="container">
+         <div class="row">
+            <div class="col-md-12">
+               <p> &copy; AyatNesia
+                  <script>
+                     document.write(new Date().getFullYear())
+                  </script>
+                  - Crafted by <a href="https://utrodus.my.id/" target="_blank"> <b> Utrodus Said Al Baqi</b></a>
+               </p>
+            </div>
+         </div>
+      </div>
+   </footer>
+  
+   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   <script src="{{ url_for('static', path='js/jquery-3.4.1.slim.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/popper.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/bootstrap.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/owl.carousel.js') }} "></script>
+   <script>
+      const $button = document.querySelector('#sidebar-toggle');
+      const $button2 = document.querySelector('#sidebar-toggle2');
+      const $wrapper = document.querySelector('#wrapper');
+
+      $button.addEventListener('click', (e) => {
+         e.preventDefault();
+         $wrapper.classList.toggle('toggled');
+      });
+
+      $button2.addEventListener('click', (e) => {
+         e.preventDefault();
+         $wrapper.classList.toggle('toggled');
+      });
+
+   </script>
+   <script>
+      $(document).ready(function () {
+         $("#close").click(function () {
+            $("#wrapper").removeClass('toggled');
+         });
+      });
+   </script>
+   <script>
+      $('#search').owlCarousel({
+         loop: true,
+         margin: 20,
+         dots: false,
+         autoplay: false,
+         smartSpeed: 300,
+         autoplayTimeout: 5000,
+         autoplaySpeed: 3000,
+         nav: false,
+
+         navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+         responsive: {
+            0: {
+               items: 1,
+               nav: true,
+               autoplay: false,
+
+            },
+            576: {
+               items: 2,
+               autoplay: false,
+
+            },
+            767: {
+               items: 2
+            },
+            991: {
+               items: 4
+            },
+            1200: {
+               items: 5
+            }
+         }
+      });
+
+   </script>
+</body>
+
+</html>
