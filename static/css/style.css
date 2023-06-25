@@ -37,6 +37,8 @@ ul {
 	padding: 5px 20px;
 	font-weight: 500;
 	letter-spacing: 1px;
+	min-width: 44px;
+	min-height: 44px;
 }
 
 .btn:focus,
@@ -78,11 +80,11 @@ ul {
 }
 
 header img {
-	width: 135px;
+	width: 28%;
 }
 
 .navbar-brand span {
-	color: #35256c;
+	color: #17a2b8;
 	font-size: 22px;
 	font-weight: 500;
 	position: relative;
@@ -127,32 +129,50 @@ header img {
 	top: 10px;
 	width: 240px;
 	margin: 0;
-	padding: 6px 10px 80px;
+	padding: 6px 18px 0;
 	list-style: none;
 }
 
 .sidebar-nav>li {
 	text-indent: 10px;
-	padding: 3px 10px 3px 0;
-	border-bottom: 1px solid #d3d1d1;
+	padding: 8px 1.2rem;
+	
+}
+
+.sidebar-nav>li.active {
+	background: #00a0a514;
+	border-radius: 8px;
+}
+
+.sidebar-nav li .icon-tabler {
+	color: grey;
+}
+.sidebar-nav li .icon-tabler.active {
+	color: #17a2b8;
 }
 
 .sidebar-nav>li a {
 	display: block;
 	text-decoration: none;
-	color: #1ea097;
-	line-height: 32px;
+	color: grey;
+	line-height: 26px;
 	font-weight: 500;
-	font-size: 0.95em;
+	font-size: 0.9em;
+}
+
+.sidebar-nav>li a.active {
+	color:#1ea097;
+	font-weight: bold;
 }
 
 .sidebar-nav>li>a:hover {
-	color: #35256c;
+	color: #17a2b8;
 }
 
 .sidebar-nav>li.active>a {
 	text-decoration: none;
 	font-weight: 600;
+	color:#17a2b8;
 }
 
 .sidebar-nav>li a span,
@@ -168,9 +188,9 @@ header img {
 	margin-right: 5px;
 }
 
-.sidebar-nav>li:nth-child(3) {
+/* .sidebar-nav>li:nth-child(3) {
 	border-bottom: 0;
-}
+} */
 
 #content-wrapper {
 	width: 100%;
@@ -387,7 +407,6 @@ header img {
 }
 
 .user-dashboard .dropdown-menu {
-	width: 23%;
 	padding: 10px 20px;
 	border: none;
 	border-radius: 6px;
@@ -570,7 +589,7 @@ footer p a {
 }
 
 .number {
-	margin-top: 0.8rem;
+	margin-top: 0;
 	background-image: url(../images/number.png);
 	width: 34px;
 	height: 34px;
@@ -738,6 +757,7 @@ ul.social-network li {
 	}
 
 	#content-wrapper {
+		max-width: 1366px;
 		position: relative;
 		top: 0;
 	}
@@ -848,7 +868,7 @@ ul.social-network li {
 	}
 
 	.arabic-block h5 {
-		font-size: 32px;
+		font-size: 1.2em;
 	}
 
 	.user-dashboard .item .card .card-body {
