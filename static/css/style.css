@@ -136,7 +136,7 @@ header img {
 .sidebar-nav>li {
 	text-indent: 10px;
 	padding: 8px 1.2rem;
-	
+
 }
 
 .sidebar-nav>li.active {
@@ -147,6 +147,7 @@ header img {
 .sidebar-nav li .icon-tabler {
 	color: grey;
 }
+
 .sidebar-nav li .icon-tabler.active {
 	color: #17a2b8;
 }
@@ -161,7 +162,7 @@ header img {
 }
 
 .sidebar-nav>li a.active {
-	color:#1ea097;
+	color: #1ea097;
 	font-weight: bold;
 }
 
@@ -172,11 +173,11 @@ header img {
 .sidebar-nav>li.active>a {
 	text-decoration: none;
 	font-weight: 600;
-	color:#17a2b8;
+	color: #17a2b8;
 }
 
 .sidebar-nav>li a span,
-.user-dashboard .dropdown-menu li span {
+.contents .dropdown-menu li span {
 	font-size: 30px;
 	font-weight: 500;
 	font-family: LPMQ-IsepMisbah;
@@ -253,7 +254,7 @@ header img {
 
 /* Dashboard */
 
-.user-dashboard .navbar-forms .btn {
+.contents .navbar-forms .btn {
 	background: #1ea097 !important;
 	border: 1px solid #1ea097 !important;
 	padding: 6px;
@@ -262,30 +263,34 @@ header img {
 	height: 35px;
 }
 
-.user-dashboard .navbar-forms .form-control {
+.contents .navbar-forms .form-control {
 	border-radius: 6px !important;
 	margin-right: 10px;
 }
 
-.user-dashboard .card {
+.contents .card {
 	border-radius: 12px;
 	box-shadow: 0px 2px 10px #0000000f;
 	border: none;
 	margin-bottom: 25px;
 }
 
-.user-dashboard .card .card-body {
-	padding: 20px;
+.contents .card.selected {
+	border: solid 0.5px green;
+}
+
+.contents .card .card-body {
+	padding: 1.5rem;
 	border-radius: 12px;
 	background: #fff;
 }
 
-.user-dashboard .card .card-body h2 {
+.contents .card .card-body h2 {
 	font-weight: 600;
 	margin-bottom: 0px;
 }
 
-.user-dashboard .card .card-body form label {
+.contents .card .card-body form label {
 	margin-top: 5px;
 }
 
@@ -296,12 +301,13 @@ header img {
 }
 
 .modal .modal-body {
-	padding: 25px 30px;
+	padding: 16px 0;
 }
 
 
 .modal .modal-body p {
-	font-size: 16px;
+	font-size: 0.85em;
+	text-align: justify;
 	margin-bottom: 15px;
 }
 
@@ -316,7 +322,7 @@ header img {
 }
 
 .modal .modal-content {
-	padding: 2rem;
+	padding: 1.5rem 2.5rem;
 	border-radius: 12px;
 	border: none;
 }
@@ -406,24 +412,24 @@ header img {
 	right: -13px;
 }
 
-.user-dashboard .dropdown-menu {
+.contents .dropdown-menu {
 	padding: 10px 20px;
 	border: none;
 	border-radius: 6px;
 	box-shadow: 0 0 5px #0b0a0a40;
 }
 
-.user-dashboard .dropdown-menu li {
+.contents .dropdown-menu li {
 	border-bottom: 1px solid #d3d1d1;
 	padding: 6px 0;
 }
 
-.user-dashboard .dropdown-menu li a {
+.contents .dropdown-menu li a {
 	font-size: 14px;
 
 }
 
-.user-dashboard .dropdown-menu li span {
+.contents .dropdown-menu li span {
 	line-height: 21px;
 	font-size: 30px;
 }
@@ -462,30 +468,30 @@ footer p a {
 
 /* FAQ */
 
-.faq-section {
+.search-section {
 	padding: 60px 0;
 }
 
-.faq-section h2 {
+.search-section h2 {
 	font-size: 32px;
 	margin-bottom: 50px;
 }
 
-.faq-section .card {
+.search-section .card {
 	border: none;
 	border-radius: 6px !important;
 	box-shadow: 0px 1px 4px #00000021;
 	margin-bottom: 20px;
 }
 
-.faq-section .card-header {
+.search-section .card-header {
 	background: #5268C2;
 	padding: 10px 10px 0;
 	border: none;
 	border-radius: 15px 15px 0px 0px;
 }
 
-.faq-section .card .card-header .btn-header-link {
+.search-section .card .card-header .btn-header-link {
 	display: block;
 	text-align: left;
 	background: #1ea097;
@@ -497,17 +503,17 @@ footer p a {
 	line-height: 22px;
 }
 
-.faq-section .card .card-header .btn-header-link span {
+.search-section .card .card-header .btn-header-link span {
 	font-weight: 500;
 	font-size: 35px;
 	font-family: LPMQ-IsepMisbah;
 }
 
-.faq-section .card .card-header .btn-header-link small {
+.search-section .card .card-header .btn-header-link small {
 	font-weight: 600;
 }
 
-.faq-section .card .card-header .btn-header-link:after {
+.search-section .card .card-header .btn-header-link:after {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-weight: 900;
 	float: left;
@@ -524,25 +530,25 @@ footer p a {
 	top: 8px;
 }
 
-.faq-section .card .card-header .btn-header-link.collapsed {
+.search-section .card .card-header .btn-header-link.collapsed {
 	background: #1ea097;
 	color: #fff;
 	border-radius: 0;
 }
 
-.faq-section .card .collapsing {
+.search-section .card .collapsing {
 	background: #fff;
 	line-height: 30px;
 }
 
 
-.faq-section .accordion .card-header {
+.search-section .accordion .card-header {
 	background: transparent;
 	padding: 0;
 	position: relative;
 }
 
-.faq-section .accordion .card-body {
+.search-section .accordion .card-body {
 	padding: 32px 26px;
 	font-size: 16px;
 }
@@ -719,6 +725,8 @@ ul.social-network li {
 	background-color: #2f6264;
 }
 
+
+
 /* Media Query */
 
 
@@ -785,7 +793,7 @@ ul.social-network li {
 
 @media (max-width: 991px) {
 
-	.user-dashboard .card .card-body {
+	.contents .card .card-body {
 		padding: 15px;
 	}
 
@@ -868,10 +876,10 @@ ul.social-network li {
 	}
 
 	.arabic-block h5 {
-		font-size: 1.2em;
+		font-size: 1.4em;
 	}
 
-	.user-dashboard .item .card .card-body {
+	.contents .item .card .card-body {
 		padding: 15px 30px;
 	}
 }
