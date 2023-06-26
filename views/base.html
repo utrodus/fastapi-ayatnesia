@@ -8,16 +8,17 @@
    <!-- Favicon -->
    <link href="{{ url_for('static', path='images/favicon.png') }} " sizes="60x60" rel="shortcut icon"
       type="image/x-icon" />
-   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="{{ url_for('static', path='css/bootstrap.min.css') }}">
    <link rel="stylesheet" href="{{ url_for('static', path='css/owl.carousel.min.css') }}">
    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+   <script src="https://unpkg.com/@dotlottie/player-component@1.0.0/dist/dotlottie-player.js"></script>
    <title>AyatNesia - Pencarian Relevansi Text Terjemahan Ayat Al Qur'an</title>
 
 </head>
 
 <body>
+
    <header>
       <nav class="navbar navbar-expand-lg navbar-light">
          <a class="navbar-brand" href="/">
@@ -110,6 +111,7 @@
          </ul>
       </aside>
       {% block content %}
+
       {% endblock content %}
    </div>
 
@@ -195,13 +197,19 @@
                var targetAyah = $('#ayat-' + selectedAyah);
                if (targetAyah.length > 0) {
                   $('html, body').animate({
-                     scrollTop: targetAyah.offset().top -100
+                     scrollTop: targetAyah.offset().top - 100
                   }, 500);
 
                   $('.card').removeClass('selected');
                   targetAyah.addClass('selected');
                }
             }
+         });
+      });
+      $(document).ready(function () {
+         $('.chips').click(function () {
+            $('.chips').removeClass('selected');
+            $(this).addClass('selected');
          });
       });
    </script>
