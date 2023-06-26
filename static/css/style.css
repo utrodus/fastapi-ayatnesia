@@ -59,7 +59,6 @@ ul {
 .form-control {
 	font-size: 13px;
 	height: 35px;
-	border-radius: 6px
 }
 
 .form-control:focus {
@@ -331,14 +330,23 @@ header img {
 	text-align: center !important;
 }
 
-.fa-times {
-	position: absolute;
-	right: 15px;
-	font-size: 22px;
-	top: 10px;
-	color: #1ea097;
-	-webkit-text-stroke: 2px #fafafa;
+.chips {
+	display: inline-block;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	padding: 5px 10px;
+	border-radius: 20px;
+	background-color: #f1f1f1;
+	cursor: pointer;
 }
+
+.chips.selected {
+	background-color: #58b798;
+	color: #fff;
+}
+
+
+
 
 .search-block .item {
 	text-align: center;
@@ -485,10 +493,11 @@ footer p a {
 }
 
 .search-section .card-header {
-	background: #5268C2;
+	background: #27a397;
 	padding: 10px 10px 0;
 	border: none;
 	border-radius: 15px 15px 0px 0px;
+	color: #fff;
 }
 
 .search-section .card .card-header .btn-header-link {
@@ -731,6 +740,8 @@ ul.social-network li {
 
 
 @media (min-width: 576px) {
+	
+
 	.modal-dialog {
 		max-width: 40%;
 		max-height: 50%;
@@ -833,7 +844,9 @@ ul.social-network li {
 }
 
 @media (max-width: 767px) {
-
+	.search-ayah-input {
+		flex-direction: column;
+	}
 	#content-wrapper {
 		padding: 90px 30px 50px 30px;
 	}
