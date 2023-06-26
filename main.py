@@ -2,6 +2,7 @@ from fastapi import FastAPI,Request, Query, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 import re
 import sys
@@ -11,12 +12,27 @@ from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
+import time
 
 
 templates = Jinja2Templates(directory="views")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Set up CORS
+origins = [
+    "http://localhost",
+    "http://127.0.0.1:8000",  
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
 
 app.title = (
     "AyatNesia API for searching Quranic verses"
@@ -116,15 +132,31 @@ async def search(query: str,
         query_preprocessed = Preprocessing(query).execute()
         
         if(measure_type == "lexical"):
+            start_time = time.time()
             results = lexical_measure.get_top_similarities(query_preprocessed,top_relevance)
-            return results
-        elif(measure_type == "semantic"):
-            results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+            end_time = time.time()
+            execution_time = end_time - start_time            
             return {
+                "execution_time": "{:.2f}".format(execution_time),
+                "results": results,
+            }
+        elif(measure_type == "semantic"):
+            start_time = time.time()
+            results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+            end_time = time.time()
+            execution_time = end_time - start_time     
+            return {
+                "execution_time": "{:.2f}".format(execution_time),
                 "results": results
             }
         elif(measure_type == "combination"):
+            start_time = time.time()
             results = lexical_semantic_measure.get_top_similarities(query_preprocessed,top_relevance)
-            return results
+            end_time = time.time()
+            execution_time = end_time - start_time     
+            return {
+                "execution_time": "{:.2f}".format(execution_time),
+                "results": results
+            }
         else:
             raise HTTPException(status_code=400, detail="Measure type tidak ditemukan.")

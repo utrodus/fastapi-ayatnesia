@@ -260,9 +260,26 @@
             })
                 .then(response => response.json())
                 .then(data => {
+
                     // Handle the response data as needed
-                    renderResults(data, selectedChipLabel.join(' '));
-                    searchKeyword.innerText = inputValue;
+                    if (data.results.length === 0) {
+                        searchKeyword.innerText = "Tidak ada hasil pencarian untuk kata kunci " + inputValue;
+                        searchResultText.style.display = 'block';
+                        // Hide loading indicator
+                        imageSearchLoading.style.display = 'none';
+
+                        // show initial image
+                        imageSearchInitial.style.display = 'block';
+                        // Enable form input and select elements
+                        searchInput.disabled = false;
+                        topRelevanceSelect.disabled = false;
+                        chips.forEach(chip => {
+                            chip.classList.remove('disabled');
+                        });
+                        return;
+                    }
+                    renderResults(data.results, selectedChipLabel.join(' '));
+                    searchKeyword.innerText = inputValue + ", dengan waktu pencarian " + data.execution_time + " detik";
                     searchResultText.style.display = 'block';
                     // Hide loading indicator
                     imageSearchLoading.style.display = 'none';

@@ -31,10 +31,13 @@ class SemanticMeasure:
     def get_top_similarities(self, query:list, top_relevance):
         results = self.calculate_semantic_similarity(query)
         if top_relevance == "all":
+            top_results = [result for result in results if result['similarity'] > 0]
             top_results = results
-        else: 
-            top_relevance = int(top_relevance)                   
-            top_results = results[:top_relevance]
+        else:
+            top_relevance = int(top_relevance)
+            results = results[:top_relevance]
+            results = [result for result in results if result['similarity'] > 0]                   
+            top_results = results 
         return top_results                    
 
 # example usage    

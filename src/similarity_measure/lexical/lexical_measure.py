@@ -35,10 +35,12 @@ class LexicalMeasure:
     def get_top_similarities(self, query, top_relevance):
         results = self.calculate_lexical_similarity(query)
         if top_relevance == "all":
-            top_results = results
+            top_results = [result for result in results if result['similarity'] > 0]
         else: 
-            top_relevance = int(top_relevance)                   
-            top_results = results[:top_relevance]
+            top_relevance = int(top_relevance)
+            results = results[:top_relevance]
+            results = [result for result in results if result['similarity'] > 0]                   
+            top_results = results
         return top_results             
     
 # example usage
