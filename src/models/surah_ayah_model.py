@@ -1,18 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base
-
-Base = declarative_base()
-
-class Surah(Base):
-    __tablename__ = "surah"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    translation = Column(String)
-    revelation = Column(String)
-    numberOfAyahs = Column(Integer)
-
-    ayahs = relationship("Ayah", back_populates="surah")
+class Surah:
+    def __init__(self, id, name, translation, revelation, numberOfAyahs):
+        self.id = id
+        self.name = name
+        self.translation = translation
+        self.revelation = revelation
+        self.numberOfAyahs = numberOfAyahs
+        self.ayahs = []
 
     def to_dict(self):
         return {
@@ -24,20 +17,17 @@ class Surah(Base):
         }
 
 
-class Ayah(Base):
-    __tablename__ = "ayahs"
-
-    id = Column(Integer, primary_key=True)
-    surah_id = Column(Integer, ForeignKey("surah.id"))
-    numberInQuran = Column(Integer)
-    numberInSurah = Column(Integer)
-    arabic = Column(String)
-    preprocessed = Column(String)
-    tafsir_preprocessed = Column(String)
-    translation = Column(String)
-    tafsir = Column(String)
-
-    surah = relationship("Surah", back_populates="ayahs")
+class Ayah:
+    def __init__(self, id, surah_id, numberInQuran, numberInSurah, arabic, preprocessed, tafsir_preprocessed, translation, tafsir):
+        self.id = id
+        self.surah_id = surah_id
+        self.numberInQuran = numberInQuran
+        self.numberInSurah = numberInSurah
+        self.arabic = arabic
+        self.preprocessed = preprocessed
+        self.tafsir_preprocessed = tafsir_preprocessed
+        self.translation = translation
+        self.tafsir = tafsir
 
     def to_dict(self):
         return {
@@ -53,3 +43,8 @@ class Ayah(Base):
             "translation": self.translation,
             "tafsir": self.tafsir,
         }
+
+    def set_surah(self, surah):
+        self.surah = surah
+
+

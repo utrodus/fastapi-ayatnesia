@@ -7,13 +7,13 @@ from fastapi.responses import JSONResponse
 import re
 import sys
 
-from pydantic import BaseModel
 sys.path.append("src")
 from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
 from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
+from src.models.search_results import SearchResult
 import time
 
 
@@ -83,9 +83,6 @@ semantic_measure = SemanticMeasure(word_embedding=word_embedding, all_ayahs=all_
 # initialize lexical semantic measure
 lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_measure=lexical_measure, semantic_measure=semantic_measure)
 
-class SearchResult(BaseModel):
-    execution_time: float
-    results: list
     
 # Frontend Endpoints
 @app.get("/", tags=["🌐 Web App for AyatNesia"])
