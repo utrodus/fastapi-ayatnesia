@@ -26,6 +26,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 origins = [
     "http://localhost",
     "http://127.0.0.1:8000",  
+    "https://riset.unublitar.ac.id/ayatnesia" 
 ]
 
 app.add_middleware(
@@ -65,7 +66,7 @@ If you have any questions, feedback, or need assistance regarding the AyatNesia 
     """
 )
 app.version = "1"
-app.debug = True
+app.debug = False
 
 
 # get all ayahs from database
