@@ -46,8 +46,8 @@ $ git clone https://github.com/utrodus/fastapi-quran-finder.git
 1. Open the console inside the project directory and create a virtual environment (You can skip this step if you have docker installed).
 
 ```git bash
-$ python -m venv env
-$ source env/Scripts/activate
+$ python -m venv venv
+$ source venv/Scripts/activate
 ```
 
 3. Install the app
