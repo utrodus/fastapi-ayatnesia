@@ -15,7 +15,7 @@ from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 import time
-
+import uvicorn
 
 templates = Jinja2Templates(directory="views")
 
@@ -23,17 +23,19 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Set up CORS
-origins = [
-    "http://localhost",
-    "http://127.0.0.1:8000",  
-    "https://riset.unublitar.ac.id/ayatnesia" 
-]
+# origins = [
+#     "http://localhost",
+#     "http://127.0.0.1:8000",  
+#     "https://riset.unublitar.ac.id", 
+#     "https://riset.unublitar.ac.id/ayatnesia" 
+# ]
 
+origins = ['*']
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -207,3 +209,6 @@ async def search(query: str, measure_type: str = Query("combination", title="Mea
             return response
         else:
             return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
+        
+if __name__ == '__main__':
+    uvicorn.run('main:app', host='0.0.0.0', port=8000)
