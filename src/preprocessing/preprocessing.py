@@ -38,10 +38,24 @@ class Preprocessing:
     def casefold_string(self):
         """Converts all the characters in the text to lowercase."""
         return self.input_string.lower()
+    
+    def replace_quran_sentence(self):
+        pattern = r"Al[-\s]?Qur'an|Al\s?Quran"
+        replaced_sentence = re.sub(pattern, "alquran", self.input_string, flags=re.IGNORECASE)
+        return replaced_sentence
+    
+    def remove_html_entities(self, sentence):
+        # Remove HTML entities
+        sentence_no_entities = re.sub(r'&\w+;', ' ', sentence)
+        sentence_no_entities = re.sub(r'\xa0', ' ', sentence_no_entities)  # Remove &nbsp;
+
+        return sentence_no_entities
 
     def tokenize_string(self):
         """Tokenizes the text."""
-        remove_char = re.sub(r"[^\w]", " ", self.input_string)
+        replace_sentence = self.replace_quran_sentence()
+        remove_html_tags_entities = self.remove_html_entities(replace_sentence)
+        remove_char = re.sub(r"[^\w]", " ", remove_html_tags_entities)        
         remove_number = "".join(filter(lambda x: not x.isdigit(), remove_char))
         word_tokens = word_tokenize(remove_number)
         return word_tokens
@@ -67,3 +81,8 @@ class Preprocessing:
         remove_stop_words_result = self.remove_stop_words(tokenize_result)
         stemming_result = self.stemming_text(remove_stop_words_result)
         return stemming_result   
+
+# # Example usage:
+# text = "Keistimewaan Hewan Ternak dalam Alquran"
+# preprocessed = Preprocessing(text).execute()
+# print(preprocessed)

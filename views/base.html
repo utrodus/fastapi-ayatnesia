@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Favicon -->
+   <link href="{{ url_for('static', path='images/favicon.png') }} " sizes="60x60" rel="shortcut icon"
+      type="image/x-icon" />
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="{{ url_for('static', path='css/bootstrap.min.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', path='css/owl.carousel.min.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+   <script src="https://unpkg.com/@dotlottie/player-component@1.0.0/dist/dotlottie-player.js"></script>
+   <title>AyatNesia - Pencarian Relevansi Text Terjemahan Ayat Al Qur'an</title>
+
+</head>
+
+<body>
+
+   <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+         <a class="navbar-brand" href="/">
+            <img src="{{ url_for('static', path='images/logo.webp') }} " alt="logo">
+         </a>
+         <a href="javascript:void(0)" class="ml-auto d-lg-none" id="sidebar-toggle">
+            <img src="{{ url_for('static', path='images/icon-menu-hamburger.svg') }} " alt="icon-menu-hamburger"
+               style="max-width: 1.5em;">
+            </i></a>
+      </nav>
+   </header>
+   <div id="wrapper">
+      <aside id="sidebar-wrapper">
+         <p class="px-3 mt-4" style="color:grey; font-size: 0.8em; letter-spacing: 0.5px;">MENU UTAMA</pc>
+         <ul class="sidebar-nav" style="margin-top: 2.6rem;">
+
+            <li {% if request.path=="/" %}class="active d-flex align-item-center mb-2 " {% else
+               %}class="d-flex align-item-center mb-2 " {% endif %}>
+               <svg xmlns="http://www.w3.org/2000/svg" {% if request.path=="/" %}class="icon-tabler active" {% else
+                  %}class="icon-tabler" {% endif %} width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M4 4h6v8h-6z"></path>
+                  <path d="M4 16h6v4h-6z"></path>
+                  <path d="M14 12h6v8h-6z"></path>
+                  <path d="M14 4h6v4h-6z"></path>
+               </svg>
+               <a href="/" style="width:100%" {% if request.path=="/" %}class="icon-tabler active inline-block" {% else
+                  %}class="icon-tabler inline-block" {% endif %}>Beranda</a>
+            </li>
+            <li {% if request.path=="/search" %}class="active d-flex align-item-center mb-2 " {% else
+               %}class="d-flex align-item-center mb-2 " {% endif %}>
+               <svg xmlns="http://www.w3.org/2000/svg" {% if request.path=="/search" %}class="icon-tabler active" {%
+                  else %}class="icon-tabler" {% endif %} width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                  <path d="M12 21h-5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v4.5"></path>
+                  <path d="M16.5 17.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path>
+                  <path d="M18.5 19.5l2.5 2.5"></path>
+               </svg>
+               <a href="/search" style="width:100%" {% if request.path=="/search"
+                  %}class="icon-tabler active inline-block" {% else %}class="icon-tabler inline-block" {% endif %}>Cari
+                  Ayat</a>
+            </li>
+            <li class="d-flex align-item-center mb-2 ">
+               <svg xmlns="http://www.w3.org/2000/svg" class="icon-tabler" width="24" height="24" viewBox="0 0 24 24"
+                  stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+                  <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+                  <path d="M3 6l0 13"></path>
+                  <path d="M12 6l0 13"></path>
+                  <path d="M21 6l0 13"></path>
+               </svg>
+               <a href="/docs" target="_blank"> Dokumentasi API</a>
+            </li>
+
+            <li class="  d-flex align-item-center">
+               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-send" width="24" height="24"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M10 14l11 -11"></path>
+                  <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
+               </svg>
+               <a href="https://www.utrodus.my.id/" target="_blank"> Kontak Kami</a>
+            </li>
+            <hr>
+         </ul>
+
+         <p class="px-3" style="color:grey; font-size: 0.8em; letter-spacing: 0.5px; margin-top: 16rem;">SEMUA SURAH Al
+            QUR'AN
+            </pc>
+
+         <ul class="sidebar-nav " id="surah-list" style="margin-top: 20rem; padding-bottom: 5rem;">
+
+
+            <li class="p-0">
+               <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Masukkan Nama Surah" id="search-input">
+               </div>
+            </li>
+            {% for surah in all_surahs %}
+            <li class="surah-item  {% if surah['id'] == current_path_id %}active{% endif %}">
+               <a href="/detail-surah/{{ surah['id'] }}" {% if surah['id']==current_path_id %}active{% endif %}>{{
+                  surah['id'] }} - {{ surah['name'] }}</a>
+            </li>
+            {% endfor %}
+         </ul>
+      </aside>
+      {% block content %}
+
+      {% endblock content %}
+   </div>
+
+
+   <!-- Footer -->
+   <footer>
+      <div class="container">
+         <div class="row">
+            <div class="col-md-12">
+               <p> &copy; AyatNesia
+                  <script>
+                     document.write(new Date().getFullYear())
+                  </script>
+
+                  - Crafted by <a href="https://utrodus.my.id/" target="_blank"> <b> Utrodus Said Al Baqi</b></a>
+
+               </p>
+            </div>
+         </div>
+      </div>
+   </footer>
+   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   <script src="{{ url_for('static', path='js/jquery-3.4.1.slim.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/popper.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/bootstrap.min.js') }} "></script>
+   <script src="{{ url_for('static', path='js/owl.carousel.js') }} "></script>
+   <script>
+      const $button = document.querySelector('#sidebar-toggle');
+      // const $button2 = document.querySelector('#sidebar-toggle2');
+      const $wrapper = document.querySelector('#wrapper');
+
+      $button.addEventListener('click', (e) => {
+         e.preventDefault();
+         $wrapper.classList.toggle('toggled');
+      });
+   </script>
+   <script>
+      $(document).ready(function () {
+         let currentPath = '{{ request.url.path.split("/")[2] }}';
+
+         $("#close").click(function () {
+            $("#wrapper").removeClass('toggled');
+         });
+
+         $('.surah-item').each(function () {
+            let surahId = $(this).find('a').attr('href').split('/')[2];
+
+            if (surahId === currentPath) {
+               $(this).addClass('active');
+            } else {
+               $(this).removeClass('active');
+            }
+         });
+
+         $('#search-input').on('input', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            $('#surah-list li.surah-item').each(function () {
+               var surahName = $(this).text().toLowerCase();
+               $(this).toggle(surahName.indexOf(searchTerm) > -1);
+            });
+         });
+
+         // Scroll to top button
+         var $scrollTopBtn = $('#scroll-top-btn');
+
+         $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+               $scrollTopBtn.fadeIn();
+            } else {
+               $scrollTopBtn.fadeOut();
+            }
+         });
+
+         $scrollTopBtn.click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+         });
+      });
+      $(document).ready(function () {
+         $('#numberDropdown').change(function () {
+            var selectedAyah = $(this).val();
+            if (selectedAyah !== '') {
+               var targetAyah = $('#ayat-' + selectedAyah);
+               if (targetAyah.length > 0) {
+                  $('html, body').animate({
+                     scrollTop: targetAyah.offset().top - 100
+                  }, 500);
+
+                  $('.card').removeClass('selected');
+                  targetAyah.addClass('selected');
+               }
+            }
+         });
+      });
+      $(document).ready(function () {
+         $('.chips').click(function () {
+            $('.chips').removeClass('selected');
+            $(this).addClass('selected');
+         });
+      });
+   </script>
+
+   <script>
+      $('#search').owlCarousel({
+         loop: false,
+         margin: 20,
+         dots: false,
+         autoplay: false,
+         nav: false,
+
+         navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+         responsive: {
+            0: {
+               items: 1,
+               nav: true,
+               autoplay: false,
+
+            },
+            576: {
+               items: 2,
+               autoplay: false,
+
+            },
+            767: {
+               items: 2
+            },
+            991: {
+               items: 3
+            },
+            1200: {
+               items: 4
+            }
+         }
+      });
+
+   </script>
+   <a href="#" id="scroll-top-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-up" width="24" height="24"
+         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+         stroke-linejoin="round">
+         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+         <path d="M6 15l6 -6l6 6"></path>
+      </svg>
+   </a>
+
+</body>
+
+</html>

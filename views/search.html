@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="content-wrapper" class="contents search-section container">
+    <div class="row" id="img_search_initial">
+        <div class="col-sm-12 col-lg-10 col-xl-10">
+            <img src="{{ url_for('static', path='images/img-quran-search.png') }} " alt="img-search"
+                style="width: 12rem; display: block; margin-top: 8rem !important;" class="mx-auto ">
+            <h3 class="mt-5 text-info text-center font-weight-bold">AyatNesia</h3>
+            <p class="text-center"> Cari Ayat Al Qur'an Dengan AyatNesia </p>
+        </div>
+    </div>
+    <div class="row " id="img_search_loading">
+        <div class="col-sm-12 col-lg-10 col-xl-10">
+            <dotlottie-player autoplay loop mode="normal" class="mx-auto"
+                src="{{ url_for('static', path='animation/search_loading.lottie') }}"
+                style="width: 100%; max-width: 65%;">
+            </dotlottie-player>
+        </div>
+    </div>
+
+    <div class="row mt-4 ">
+        <div class="col-sm-12 col-lg-8 col-xl-8">
+            <div class="input-group search-ayah-input d-flex">
+                <span class="input-group-prepend d-none d-sm-none d-md-none d-lg-block">
+                    <div class="input-group-text bg-transparent border-right-0" style="min-height: 44px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+                            <path d="M21 21l-6 -6"></path>
+                        </svg>
+                        </i>
+                    </div>
+                </span>
+                <input type="text" id="searchInput" class="form-control"
+                    style="padding-left:1rem; min-height: 44px; font-size: 0.9em;"
+                    placeholder="Masukkan Kata Kunci Bahasa Indonesia Untuk Mencari Ayat Al Qur'an"
+                    aria-label="Masukkan Kata Kunci Bahasa Indonesia Untuk Mencari Ayat Al Qur'an">
+                <div class="mb-0">
+                    <select id="topRelevance" class="form-control " style="min-height: 44px; ">
+                        <option value="" selected disabled>Pilih Top Relevansi</option>
+                        <option value="5">5 Nilai Tertinggi</option>
+                        <option value="10">10 Nilai Tertinggi</option>
+                        <option value="15">15 Nilai Tertinggi</option>
+                        <option value="all">Tampilkan Semua</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-3 col-xl-3 d-none d-sm-none d-md-none d-lg-block">
+            <button type="button" id="search_button" class="btn btn-primary">Cari Ayat</button>
+        </div>
+    </div>
+
+    <div class="row mt-1 mb-2 ">
+        <div class="col-sm-12">
+            <p id="validationText" class="ml-3 mb-0 text-danger" style="font-size: 0.8em;"></p>
+        </div>
+    </div>
+    <div class="row mb-2 mt-3 ">
+        <div class="col-sm-12">
+            <p class="m-0"><small>
+                    Pilih Metode Pengukuran Kemiripan
+                </small></p>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-10 col-xl-10 ">
+            <div class="chips selected" data-value="combination"> Leksikal & Semantik</div>
+            <div class="chips" data-value="lexical">Leksikal</div>
+            <div class="chips" data-value="semantic"> Semantik</div>
+        </div>
+    </div>
+    <div class="row my-4" id="search_result_text">
+        <div class="col-sm-12 col-lg-10 col-xl-10">
+            <div class="card box-shadow-none mb-3">
+                <div class="card-body py-2">
+                    <p class="mb-0">Hasil Pencarian dengan kata kunci: <b class="text-info" id="search_keyword"></b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Container -->
+    <div class="row arabic-block mt-3">
+        <div class="col-sm-12 col-lg-9 col-xl-9" id="searchResults">
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const searchInput = document.getElementById('searchInput');
+        const searchResultText = document.getElementById('search_result_text');
+        const searchKeyword = document.getElementById('search_keyword');
+        const searchButton = document.getElementById('search_button');
+        const inputValue = sanitizeInput(searchInput.value);
+        const topRelevanceSelect = document.getElementById('topRelevance');
+        const chips = document.querySelectorAll('.chips');
+        const resultsContainer = $("#searchResults");
+        const imageSearchInitial = document.getElementById('img_search_initial');
+
+        // hide initial search result text 
+        searchResultText.style.display = 'none';
+
+        // hide loading image
+        const imageSearchLoading = document.getElementById('img_search_loading');
+        imageSearchLoading.style.display = 'none';
+
+
+        function sanitizeInput(value) {
+            // Replace potentially malicious characters with harmless equivalents
+            const sanitizedValue = value
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+
+            return sanitizedValue;
+        }
+
+        function renderResults(results, measureType) {
+
+
+            results.forEach((result) => {
+                const surahName = result.surat_name;
+                const ayahNumber = result.numberInSurah;
+                const similarityScore = result.similarity;
+                const arabicText = result.arabic;
+                const translation = result.translation;
+                const tafsir = result.tafsir;
+
+                const resultItem = `
+      <div class="card">
+        <div class="card-header py-3 pl-4" id="faqhead${ayahNumber}">
+          <p class="mb-0">${surahName} - Ayat ${ayahNumber}</p>
+          <p class="mb-0">Skor Kemiripan ${measureType}: <b>${similarityScore}</b></p>
+        </div>
+
+        <div class="card-body">
+          <div class="media">
+            <span class="number">${ayahNumber}</span>
+            <div class="media-body">
+              <h5 class="mt-0">${arabicText}</h5>
+              <p class="mb-0 mt-3"><b>Artinya:</b> ${translation}</p>
+              <button type="button" class="btn btn-outline-info mt-3" data-toggle="modal" data-target=".modal-tafsir-${ayahNumber}">Baca Tafsir</button>
+
+              <div class="modal fade modal-tafsir-${ayahNumber}" tabindex="-1" role="dialog" style="padding-top: 5rem; padding-bottom: 5rem;" aria-labelledby="model tafsir" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <h5 style="text-align: right !important; color: black !important;">${arabicText}</h5>
+                    <p style="font-size: 1.1em;" class="modal-title p-0 m-0 mt-4 text-info"><b>Tafsir Ringkas Kemenag (${surahName}) Ayat ${ayahNumber}:</b></p>
+                    <button type="button" data-dismiss="modal" aria-label="Close" style="position: absolute; right: -0.5rem; top: -0.6rem; min-width: 38px; min-height: 38px; border-radius: 100%; border: none;">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 1.1rem;">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                    <div class="modal-body">
+                      <p class="modal-body-content">${tafsir}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+                resultsContainer.append(resultItem);
+            });
+        }
+
+
+
+        function performRequest() {
+            const selectedOption = topRelevanceSelect.value;
+            const selectedChips = Array.from(chips)
+                .filter(chip => chip.classList.contains('selected'))
+                .map(chip => chip.getAttribute('data-value'));
+
+            const selectedChipLabel = Array.from(chips)
+                .filter(chip => chip.classList.contains('selected'))
+                .map(chip => chip.innerText);
+
+            const validationText = document.getElementById('validationText');
+
+            const inputValue = sanitizeInput(searchInput.value);
+            // Perform validation
+            if (inputValue === "") {
+                validationText.innerText = "Mohon masukkan kata kunci pencarian";
+                return;
+            } else if (!inputValue) {
+                validationText.innerText = "Kata Kunci tidak valid";
+                return;
+            } else {
+                validationText.innerText = "";
+            }
+
+            if (searchInput.value === "") {
+                validationText.innerText = "Mohon masukkan kata kunci pencarian";
+                return;
+            } else {
+                validationText.innerText = "";
+            }
+
+            // Perform validation
+            if (selectedOption === "" || selectedOption === null) {
+                validationText.innerText = "Mohon pilih Top Relevansi Atau Jumlah Relevansi Tertinggi yang ingin ditampilkan";
+                return;
+            } else {
+                validationText.innerText = "";
+            }
+
+            // hide initial search result text 
+            searchResultText.style.display = 'none';
+
+            // Empty the results container
+            resultsContainer.empty();
+
+            // Hide initial image
+            imageSearchInitial.style.display = 'none';
+
+            // Show loading image
+            imageSearchLoading.style.display = 'block';
+
+            // Disable form input and select elements
+            searchInput.disabled = true;
+            topRelevanceSelect.disabled = true;
+            chips.forEach(chip => {
+                chip.classList.add('disabled');
+            });
+
+            let selectedMeasureType = selectedChips.join(' ');
+
+            // Construct the URL with query parameters
+            const baseUrl = '/api/search';
+            const queryParams = new URLSearchParams({
+                query: inputValue,
+                measure_type: selectedMeasureType,
+                top_relevance: selectedOption,
+            });
+            const url = `${baseUrl}?${queryParams}`;
+
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    // Handle the response data as needed
+                    if (data.results.length === 0) {
+                        searchKeyword.innerText = "Tidak ada hasil pencarian untuk kata kunci " + inputValue;
+                        searchResultText.style.display = 'block';
+                        // Hide loading indicator
+                        imageSearchLoading.style.display = 'none';
+
+                        // show initial image
+                        imageSearchInitial.style.display = 'block';
+                        // Enable form input and select elements
+                        searchInput.disabled = false;
+                        topRelevanceSelect.disabled = false;
+                        chips.forEach(chip => {
+                            chip.classList.remove('disabled');
+                        });
+                        return;
+                    }
+                    renderResults(data.results, selectedChipLabel.join(' '));
+                    searchKeyword.innerText = inputValue + ", dengan waktu pencarian " + data.execution_time + " detik";
+                    searchResultText.style.display = 'block';
+                    // Hide loading indicator
+                    imageSearchLoading.style.display = 'none';
+
+                    // show initial image
+                    imageSearchInitial.style.display = 'block';
+
+                    // Enable form input and select elements
+                    searchInput.disabled = false;
+                    topRelevanceSelect.disabled = false;
+                    chips.forEach(chip => {
+                        chip.classList.remove('disabled');
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    searchKeyword.innerText = "Tidak ada hasil pencarian untuk kata kunci " + inputValue;
+                    searchResultText.style.display = 'block';
+                    // Hide loading indicator
+                    imageSearchLoading.style.display = 'none';
+
+                    // show initial image
+                    imageSearchInitial.style.display = 'block';
+                    // Enable form input and select elements
+                    searchInput.disabled = false;
+                    topRelevanceSelect.disabled = false;
+                    chips.forEach(chip => {
+                        chip.classList.remove('disabled');
+                    });
+                });
+        }
+
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                performRequest();
+            }
+        });
+
+        searchButton.addEventListener('click', function (even) {
+            performRequest();
+        });
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', function () {
+                this.classList.toggle('selected');
+            });
+        });
+    });
+</script>
+{% endblock content %}

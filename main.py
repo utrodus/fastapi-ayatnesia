@@ -1,22 +1,50 @@
-from fastapi import FastAPI, Query, HTTPException
-from pydantic import Field
+from fastapi import FastAPI,Request, Query
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
+import re
 import sys
+
+from pydantic import BaseModel
 sys.path.append("src")
-from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id
+from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
 from src.preprocessing.preprocessing import Preprocessing
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
+from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
+from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
+import time
+import uvicorn
+
+templates = Jinja2Templates(directory="views")
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Set up CORS
+# origins = [
+#     "http://localhost",
+#     "http://127.0.0.1:8000",  
+#     "https://riset.unublitar.ac.id", 
+#     "https://riset.unublitar.ac.id/ayatnesia" 
+# ]
+
+origins = ['*']
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.title = (
-    "Quran Search API for searching Quranic verses"
+    "AyatNesia API for searching Quranic verses"
 )
 app.description = (
     """
-
-## Quran Search API
-
-The Quran Search API allows you to search for text using various measures such as lexical, semantic, and lexical semantic.
+The AyatNesia API allows you to search for text using various measures such as lexical, semantic, and lexical semantic.
 
 It provides an efficient way to access and retrieve information from the Quran.
 
@@ -24,51 +52,163 @@ It provides an efficient way to access and retrieve information from the Quran.
 
 ## 💎 Key Features:
 
--   Get all Qur'an Surahs (✅ done).
--   Get detailed information about a specific Quran Surah (✅ done).
--   Search using lexical measures (✅ done).
--   Search using semantic measures (⏳ _in progress_).
--   Search using lexical semantic measures (⏳ _in progress_).
+- **Get All Qur'an Surahs**: Retrieve the list of all Surahs (chapters) in the Quran.
+
+- **Get Surah Details**: Get detailed information about a specific Surah, including its verses (Ayahs) and other metadata.
+
+- **Search Using Lexical Measures**: Perform a search based on lexical similarity, finding verses that are lexically similar to the query text.
+
+- **Search Using Semantic Measures**: Conduct a search based on semantic similarity, identifying verses that are semantically related to the query text.
+
+- **Search Using Lexical-Semantic Measures**: Utilize a combined approach of lexical and semantic measures for more accurate and comprehensive search results.
+
+## 📞 Contact Us
+If you have any questions, feedback, or need assistance regarding the AyatNesia API, please don't hesitate to [contact us](https://www.utrodus.my.id/). We are here to help you!
 
     """
 )
-app.version = "0.0.1"
-app.debug = True
+app.version = "1"
+app.debug = False
 
-@app.get("/", tags=["1. Test Connection"])
-def root():
-    return {"message": "Welcome to Quran Finder API. Please go to /docs for more info."}
 
-@app.get("/test-connection", tags=["1. Test Connection"])
+# get all ayahs from database
+all_ayahs = get_all_ayahs()
+# get all surahs from database
+all_surah = get_all_surahs()
+
+# initialize lexical measure
+lexical_measure = LexicalMeasure(all_ayahs=all_ayahs)
+
+# initialize semantic measure
+word_embedding = WordEmbedding()
+semantic_measure = SemanticMeasure(word_embedding=word_embedding, all_ayahs=all_ayahs)
+
+# initialize lexical semantic measure
+lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_measure=lexical_measure, semantic_measure=semantic_measure)
+
+class SearchResult(BaseModel):
+    execution_time: float
+    results: list
+    
+# Frontend Endpoints
+@app.get("/", tags=["🌐 Web App for AyatNesia"])
+async def home(request: Request):
+    """
+    ## 🏠 Endpoint that redirects to the home page.
+    """
+    return templates.TemplateResponse("index.html", {"request": request, "all_surahs": all_surah})
+
+@app.get("/detail-surah/{id}", tags=["🌐 Web App for AyatNesia"])
+async def detail_surah(request: Request, id: int):
+    """
+    ## 📜 Endpoint that redirects to the detail surah page.
+    """
+    detail_surah = get_all_ayahs_by_surah_id(id)
+    return templates.TemplateResponse("detail_surah.html", {"request": request, "all_surahs": all_surah, "detail_surah": detail_surah})
+
+@app.get("/search", tags=["🌐 Web App for AyatNesia"])
+async def search(request: Request):
+    """
+    ## 🔍 Endpoint that redirects to the search page.
+    """
+    return templates.TemplateResponse("search.html", {"request": request, "all_surahs": all_surah})
+
+
+# API Endpoints
+@app.get("/api/test-connection", tags=["🔌 API: Test Connection"])
 async def test_connections():
+    """
+    ## Test the connection to the AyatNesia API. ⚡️
+
+    ### Returns:
+        - 200 OK: If the connection is successful.
+        - 500 Internal Server Error: If the API fails to connect to the database.
+    """
     connections_status = check_database_connection()
-    if(connections_status):
-        return {"message": "Quran Finder API is running. "}
+    if connections_status:
+        return {"message": "AyatNesia API is running. ✅"}
     else:
-        raise HTTPException(status_code=500, detail="Quran Finder API is not running, Failed to connect to the database")
+        return JSONResponse(status_code=500, content={"detail": "AyatNesia API is not running. Failed to connect to the database"})
 
-@app.get("/all-surahs",  tags=["2. Get Surahs And Detail"])
+
+@app.get("/api/all-surahs", tags=["📃 API: Get Surahs and Detail"])
 async def get_list_surah():
-    all_surah = get_all_surahs()
-    return all_surah
+    """
+    ## Get the list of all surahs. 📚
 
-@app.get("/detail/{surah_id}", tags=["2. Get Surahs And Detail"])
+    ### Returns:
+        - 200 OK: List of all surahs.
+        - 500 Internal Server Error: If there's an error retrieving the surahs.
+    """
+    try:
+        return all_surah
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"detail": f"Failed to retrieve surahs. Error: {str(e)}"})
+
+
+@app.get("/api/detail/{surah_id}", tags=["📃 API: Get Surahs and Detail"])
 async def get_surah(surah_id: int):
-    ayahs = get_all_ayahs_by_surah_id(surah_id)
-    return ayahs
+    """
+    ## Get the detail of a surah by its ID. 📖
 
-@app.post("/search", tags=["3. Search Feature"])
-async def search(query: str, measure_type: str = Query("lexical", title="Measure Type", description="**Measure type** will be used: ( *lexical | semantic | lexical_semantic*)"), limit: int = Query(5, title="Limit", description="**Limit** the number of results returned. Default: 5")):
-    if(query == ""):
-        return {"message": "Kata kunci tidak boleh kosong."}
+    ### Parameters:
+        - surah_id (int): The ID of the surah.
+
+    ### Returns:
+        - 200 OK: Detail of the surah.
+        - 500 Internal Server Error: If there's an error retrieving the surah details.
+    """
+    try:
+        ayahs = get_all_ayahs_by_surah_id(surah_id)
+        return ayahs
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"detail": f"Failed to retrieve surah details. Error: {str(e)}"})
+
+
+@app.post("/api/search", tags=["🔎 API: Search Feature"])
+async def search(query: str, measure_type: str = Query("combination", title="Measure Type", description="Measure type to be used: lexical, semantic, combination"), top_relevance=Query("all", title="Top Relevance", description="Filter Top Relevance: the number of results returned (all, 5, 10, 15)")):
+    """
+    ## Perform a search based on the query and measure type. 🔍
+
+    ### Parameters:
+        - query (str): The search query.
+        - measure_type (str): Measure type to be used: lexical, semantic, combination.
+        - top_relevance (str): Filter Top Relevance: the number of results returned (all, 5, 10, 15).
+
+    ### Returns:
+        - 200 OK: Search results.
+        - 400 Bad Request: If the query is empty or the measure type is invalid.
+        - 500 Internal Server Error: If there's an error during the search process.
+    """
+    measure_type = re.sub(r"\s+", "", measure_type.lower(), flags=re.UNICODE)
+    if query == "":
+        return JSONResponse(status_code=400, content={"detail": "Kata kunci tidak boleh kosong."})
     else:
         query_preprocessed = Preprocessing(query).execute()
-        if(measure_type == "lexical"):
-            lexical_measure = LexicalMeasure()
-            lexical_measure.calculate_lexical_similarity(query_preprocessed)
-            results = lexical_measure.get_top_similarities(limit)
-            return results
-        elif(measure_type == "semantic"):
-            return {"query": query_preprocessed}
+
+        if measure_type == "lexical":
+            start_time = time.time()
+            results = lexical_measure.get_top_similarities(query_preprocessed, top_relevance)
+            end_time = time.time()
+            execution_time = end_time - start_time
+            response = SearchResult(execution_time=execution_time, results=results)
+            return response
+        elif measure_type == "semantic":
+            start_time = time.time()
+            results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+            end_time = time.time()
+            execution_time = end_time - start_time
+            response = SearchResult(execution_time=execution_time, results=results)
+            return response
+        elif measure_type == "combination":
+            start_time = time.time()
+            results = lexical_semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+            end_time = time.time()
+            execution_time = end_time - start_time
+            response = SearchResult(execution_time=execution_time, results=results)
+            return response
         else:
-            return {"query": query_preprocessed}
+            return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
+        
+if __name__ == '__main__':
+    uvicorn.run('main:app', host='0.0.0.0', port=8000)

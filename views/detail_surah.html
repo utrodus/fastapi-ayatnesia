@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<section id="content-wrapper" class="container-fluid contents">
+    <div class="row arabic-block mt-3">
+        <div class="col-sm-12 col-xl-3 ">
+            <div class="card box-shadow-none mb-3 sticky-top" style="top:5rem; z-index: 99;" >
+                <div class="card-body">
+                    <div class="row" style="padding: 1rem !important;">
+                        <p class="mr-3">{{detail_surah['id']}}. </p>
+                        <div>
+                            <p class="mb-1"><span class="text-info"><b> Surah
+                                        {{detail_surah['name']}}</b></span> ({{detail_surah['translation']}}) </p>
+                            <span class="text-info">{{detail_surah['revelation']}} </span>&nbsp; - &nbsp; <span
+                                class="text-info">{{detail_surah['numberOfAyahs']}} Ayat</span>
+                        </div>
+
+                    </div>
+                    <div class="row align-item-center justify-content-center">
+                        <label class="mr-3 mb-0" for="numberDropdown"><small>Pergi Ke:</small></label>
+                        <div class="form-group mb-0">
+                            <select id="numberDropdown" class="form-control">
+                                <option value="" selected disabled>Pilih Nomor</option>
+                                {% for ayah in detail_surah['ayahs'] %}
+                                <option value="{{ayah['number_in_surah']}}">Ayat {{ayah['number_in_surah']}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="itemList" class="col-sm-12 col-xl-8">
+            {% for ayah in detail_surah['ayahs'] %}
+            <div id="ayat-{{ayah['number_in_surah']}}" class="card">
+                <div class="card-body" id="faqhead{{ayah['number_in_surah']}}">
+                    <div class="media">
+                        <span class="number">{{ayah['number_in_surah']}}</span>
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-3"> {{ayah['arabic']}}</h5>
+                            <p class="mb-3 mt-4" style="text-align: justify;"> <b> Artinya:</b> {{ayah['translation']}}</p>
+
+                            <button type="button" class="btn btn-outline-info " data-toggle="modal"
+                                data-target=".modal-tafsir-{{ayah['id']}}">Baca Tafsir</button>
+
+                            <div class="modal fade modal-tafsir-{{ayah['id']}}" tabindex="-1" role="dialog"
+                                style="padding-top: 5rem; padding-bottom: 5rem;" aria-labelledby="model tafsir"
+                                aria-hidden="true">
+                                <div class="modal-dialog ">
+
+                                    <div class="modal-content">
+                                        <h5 style="text-align: right !important; color: black !important;">{{ayah['arabic']}}</h5>
+                                        <p style="font-size: 1.1em;" class="modal-title p-0 m-0 mt-4 text-info"><b>Tafsir Ringkas Kemenag ({{detail_surah['name']}} Ayat {{ayah['number_in_surah']}}):</b>  </p>
+
+                                        <button type="button" data-dismiss="modal" aria-label="Close" style="    position: absolute;
+                                            right: -0.5rem;
+                                            top: -0.6rem;
+                                            min-width: 38px;
+                                            min-height: 38px;
+                                            border-radius: 100%;
+                                            /* background: #fff; */
+                                            border: none;
+                                        ">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-x" width="24" height="24"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                style="    width: 1.1rem;">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M18 6l-12 12"></path>
+                                                <path d="M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="modal-body">
+                                            <p class="modal-body-content">{{ayah['tafsir']}}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    
+</section>
+
+{% endblock content %}

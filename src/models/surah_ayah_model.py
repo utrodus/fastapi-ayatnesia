@@ -9,6 +9,8 @@ class Surah(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     translation = Column(String)
+    revelation = Column(String)
+    numberOfAyahs = Column(Integer)
 
     ayahs = relationship("Ayah", back_populates="surah")
 
@@ -17,6 +19,8 @@ class Surah(Base):
             "id": self.id,
             "name": self.name,
             "translation": self.translation,
+            "revelation": self.revelation,
+            "numberOfAyahs": self.numberOfAyahs,
         }
 
 
@@ -29,6 +33,7 @@ class Ayah(Base):
     numberInSurah = Column(Integer)
     arabic = Column(String)
     preprocessed = Column(String)
+    tafsir_preprocessed = Column(String)
     translation = Column(String)
     tafsir = Column(String)
 
@@ -44,6 +49,7 @@ class Ayah(Base):
             },
             "arabic": self.arabic,
             "preprocessed": self.preprocessed.split(","),
+            "tafsir_preprocessed": self.tafsir_preprocessed.split(","),
             "translation": self.translation,
             "tafsir": self.tafsir,
         }
