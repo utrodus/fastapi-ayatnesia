@@ -12,6 +12,10 @@
   - [Run it locally](#run-it-locally)
   - [install required data nltk library](#install-required-data-nltk-library)
   - [Basic Usage](#basic-usage)
+  - [Deployment 🚀](#deployment-)
+    - [Build docker images](#build-docker-images)
+    - [Save docker image as a tar file](#save-docker-image-as-a-tar-file)
+    - [Run the FastAPI application using Docker:](#run-the-fastapi-application-using-docker)
 
 
 ## Description
@@ -75,5 +79,29 @@ first off all, run preprocessing quran data for preprocessing ayahs for each sur
 ```git bash
 $ python src/preprocessing/quran_preprocessing.py
 ```
+
+## Deployment 🚀
+### Build docker images 
+This command will build a Docker image named "ayatnesia" using the Dockerfile in the current directory. The -t option assigns a tag (name) to the image.
+
+```git bash
+$ docker build -t ayatnesia .
+```
+
+### Save docker image as a tar file
+Run the following command to save the Docker image as a tar file:
+
+```git bash
+$ docker save ayatnesia -o ayatnesia.tar
+```
+
+### Run the FastAPI application using Docker:
+Start a Docker container using the following command:
+
+```git bash
+$ docker run -d --name ayatnesia-container -p 3100:3100 ayatnesia
+```
+
+
 
 Once you are running the server open the [Swagger UI App](http://localhost:8000/docs) to checkout the API documentation.
