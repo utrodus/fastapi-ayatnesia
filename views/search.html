@@ -224,16 +224,21 @@
             });
 
 
-
-            // Create a regular expression with the search text
-            var regex = new RegExp(searchKeyword, "gi");
+            const queryWords = searchKeyword.split(" ");
             const translation = document.querySelectorAll(".translation");
+
             translation.forEach(function (text) {
-                const highlightedText = text.innerText.replace(regex, function (match) {
-                    return "<span style ='background: #ffedd4;'>" + match + "</span>";
+                let highlightedText = text.innerHTML;
+
+                queryWords.forEach(function (word) {
+                    const regex = new RegExp(word, "gi");
+                    highlightedText = highlightedText.replace(regex, "<span style ='background: #ffedd4;'>$&</span>");
                 });
+
                 text.innerHTML = highlightedText;
             });
+
+
         }
 
 

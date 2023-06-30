@@ -196,8 +196,9 @@ header img {
 	width: 100%;
 	padding: 30px 30px 40px 30px;
 	min-height: calc(100vh - 105px);
-
 }
+
+
 
 #wrapper.toggled #content-wrapper {
 	position: absolute;
@@ -633,6 +634,24 @@ footer p a {
 	background-color: #1ea097;
 }
 
+body{
+	height: 100%;
+}
+
+body::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+	background-color: #fafafa;
+}
+
+body::-webkit-scrollbar {
+	width: 12px;
+	background-color: #fafafa;
+}
+
+body::-webkit-scrollbar-thumb {
+	background-color: #1ea097;
+}
+
 
 /* footer social icons */
 ul.social-network {
@@ -733,6 +752,7 @@ ul.social-network li {
 #scroll-top-btn:hover {
 	background-color: #2f6264;
 }
+
 .toast {
 	position: fixed;
 	top: 16px;
@@ -744,22 +764,22 @@ ul.social-network li {
 	color: #fff;
 	z-index: 9999;
 	transition: opacity 0.3s;
-  }
-  
-  
-  .hide {
+}
+
+
+.hide {
 	opacity: 0;
-  }
-  
-  .toast-text {
+}
+
+.toast-text {
 	font-size: 14px;
 	line-height: 1.2;
-  }
-  
-  .show {
+}
+
+.show {
 	opacity: 1;
-  }
-  
+}
+
 
 
 /* Media Query */
