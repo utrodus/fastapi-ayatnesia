@@ -21,6 +21,7 @@ class LexicalMeasure:
                 'surah_id': ayah['surah_id'],
                 'surat_name': get_surah_name_by_id(ayah['surah_id']),
                 'similarity': float(similarity),
+                'similarity_percentage': round(float(similarity) * 100, 2) ,
                 'arabic': ayah['arabic'],
                 'translation': ayah['translation'],
                 'numberInQuran': ayah['number']['inQuran'],
@@ -35,7 +36,7 @@ class LexicalMeasure:
     def get_top_similarities(self, query, top_relevance):
         results = self.calculate_lexical_similarity(query)
         if top_relevance == "all":
-            top_results = [result for result in results if result['similarity'] > 0]
+            top_results = [result for result in results if result['similarity'] > 0.6]
         else: 
             top_relevance = int(top_relevance)
             results = results[:top_relevance]

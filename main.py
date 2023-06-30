@@ -7,10 +7,11 @@ from fastapi.responses import JSONResponse
 import re
 import sys
 
-from pydantic import BaseModel
+
 sys.path.append("src")
 from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
 from src.preprocessing.preprocessing import Preprocessing
+from src.models.search_result_model import SearchResult
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
@@ -21,14 +22,6 @@ templates = Jinja2Templates(directory="views")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Set up CORS
-# origins = [
-#     "http://localhost",
-#     "http://127.0.0.1:8000",  
-#     "https://riset.unublitar.ac.id", 
-#     "https://riset.unublitar.ac.id/ayatnesia" 
-# ]
 
 origins = ['*']
 app.add_middleware(
@@ -68,7 +61,7 @@ If you have any questions, feedback, or need assistance regarding the AyatNesia 
     """
 )
 app.version = "1"
-app.debug = False
+app.debug = True
 
 
 # get all ayahs from database
@@ -86,9 +79,7 @@ semantic_measure = SemanticMeasure(word_embedding=word_embedding, all_ayahs=all_
 # initialize lexical semantic measure
 lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_measure=lexical_measure, semantic_measure=semantic_measure)
 
-class SearchResult(BaseModel):
-    execution_time: float
-    results: list
+
     
 # Frontend Endpoints
 @app.get("/", tags=["🌐 Web App for AyatNesia"])
