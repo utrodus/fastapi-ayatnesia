@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Request, Query
+from fastapi import FastAPI,Request, Query, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 
 import re
 import sys
-
 
 sys.path.append("src")
 from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
@@ -16,7 +15,6 @@ from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 import time
-import uvicorn
 
 templates = Jinja2Templates(directory="views")
 
@@ -61,7 +59,7 @@ If you have any questions, feedback, or need assistance regarding the AyatNesia 
     """
 )
 app.version = "1"
-app.debug = True
+app.debug = False
 
 
 # get all ayahs from database
@@ -106,7 +104,7 @@ async def search(request: Request):
 
 
 # API Endpoints
-@app.get("/api/test-connection", tags=["🔌 API: Test Connection"])
+@app.get("/api/test-connection", tags=["🔌 API: Test Connection"],status_code=status.HTTP_200_OK)
 async def test_connections():
     """
     ## Test the connection to the AyatNesia API. ⚡️
@@ -201,5 +199,3 @@ async def search(query: str, measure_type: str = Query("combination", title="Mea
         else:
             return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
         
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8000)
