@@ -14,7 +14,9 @@
   - [Basic Usage](#basic-usage)
   - [Deployment 🚀](#deployment-)
     - [Run the FastAPI application using Docker:](#run-the-fastapi-application-using-docker)
-    - [To remove docker container](#to-remove-docker-container)
+    - [Check docker container process](#check-docker-container-process)
+    - [View Logs docker container process](#view-logs-docker-container-process)
+    - [remove any stopped containers and all unused images](#remove-any-stopped-containers-and-all-unused-images)
 
 
 ## Description
@@ -87,10 +89,23 @@ Start a Docker container using the following command:
 docker-compose up -d --build
 ```
 
-### To remove docker container 
+### Check docker container process
 ```git bash
-docker ps -aq | xargs docker stop | xargs docker rm
+docker ps -a
 ```
+
+### View Logs docker container process
+```git bash
+docker logs "container-id"
+```
+
+### remove any stopped containers and all unused images
+```git bash
+docker stop "container-id"
+docker system prune -a
+```
+
+
 
 
 Once you are running the server open the [Swagger UI App](http://localhost:8000/docs) to checkout the API documentation.
