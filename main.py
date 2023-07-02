@@ -3,6 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 
 import re
 import sys
@@ -80,14 +82,14 @@ lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_m
 
     
 # Frontend Endpoints
-@app.get("/", tags=["🌐 Web App for AyatNesia"])
+@app.get("/", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def home(request: Request):
     """
     ## 🏠 Endpoint that redirects to the home page.
     """
     return templates.TemplateResponse("index.html", {"request": request, "all_surahs": all_surah})
 
-@app.get("/detail-surah/{id}", tags=["🌐 Web App for AyatNesia"])
+@app.get("/detail-surah/{id}", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def detail_surah(request: Request, id: int):
     """
     ## 📜 Endpoint that redirects to the detail surah page.
@@ -95,7 +97,7 @@ async def detail_surah(request: Request, id: int):
     detail_surah = get_all_ayahs_by_surah_id(id)
     return templates.TemplateResponse("detail_surah.html", {"request": request, "all_surahs": all_surah, "detail_surah": detail_surah})
 
-@app.get("/search", tags=["🌐 Web App for AyatNesia"])
+@app.get("/search", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def search(request: Request):
     """
     ## 🔍 Endpoint that redirects to the search page.
@@ -103,7 +105,17 @@ async def search(request: Request):
     return templates.TemplateResponse("search.html", {"request": request, "all_surahs": all_surah})
 
 
+
 # API Endpoints
+
+@app.get("/api/docs", include_in_schema=False)
+async def get_documentation():
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="Swagger")
+
+@app.get("/openapi.json", include_in_schema=False)
+async def openapi():
+    return get_openapi(title=app.title, version=app.version, routes=app.routes)
+
 @app.get("/api/test-connection", tags=["🔌 API: Test Connection"],status_code=status.HTTP_200_OK)
 async def test_connections():
     """
