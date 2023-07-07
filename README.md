@@ -86,7 +86,7 @@ python src/preprocessing/quran_preprocessing.py
 Start a Docker container using the following command:
 
 ```git bash
-docker-compose up -d --build
+docker-compose up -d
 ```
 
 ### Check docker container process
