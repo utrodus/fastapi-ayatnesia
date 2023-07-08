@@ -30,11 +30,11 @@ It provides an efficient way to access and retrieve information from the Quran.
 
 ### Features
 💎 Key Features:
-- Get all Qur'an Surahs (✅ done).
-- Get detailed information about a specific Quran Surah (✅ done).
-- Search using lexical measures (✅ done).
-- Search using semantic measures (⏳ _in progress_).
-- Search using lexical semantic measures (⏳ _in progress_).
+- Get all Qur'an Surahs 
+- Get detailed information about a specific Quran Surah 
+- Search using lexical measures 
+- Search using semantic measures 
+- Search using lexical semantic measures 
 
 ## Requirements:
 
