@@ -86,3 +86,18 @@ class Preprocessing:
 # text = "Keistimewaan Hewan Ternak dalam Alquran"
 # preprocessed = Preprocessing(text).execute()
 # print(preprocessed)
+# list_query = [
+#     "Hati bersih",
+#     "Doa istiqamah",
+#     "Sabar musibah",
+#     "Kebaikan tetangga",
+#     "Tawakal Allah	",
+#     "Ayat Al-Qur'an tentang bagaimana bersyukur kepada Allah SWT",
+#     "Kisah Nabi Yusuf dan istri Potifar dalam Al-Qur'an	",
+#     "Ajaran Al-Qur'an mengenai kesabaran dalam menghadapi cobaan",
+#     "Penjelasan Al-Qur'an mengenai hukum riba dan perjudian",
+#     "Referensi Al-Qur'an tentang akhlak mulia dan tata krama dalam kehidupan sehari-hari",
+# ]
+
+# for query in list_query:
+#     print(Preprocessing(query).execute())
