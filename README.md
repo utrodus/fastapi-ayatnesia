@@ -26,6 +26,19 @@ The Quran Search API allows you to search for text using various measures such a
 It provides an efficient way to access and retrieve information from the Quran.
 
 
+In this project, we used two exciting methods: one for measuring lexical similarity and another for gauging semantic similarity. In the application, users have the flexibility to opt for either of these methods independently or harness the power of both in combination.
+
+For measuring Lexical Similarity the methods used are TF-IDF and Cosine similarity.
+
+1.  TF-IDF: TF-IDF is used to evaluate the importance of words in the translation of the Qur'an. TF-IDF is a method used to evaluate the importance of a word in a document or text. This is done by calculating how often the word appears in the document (Term Frequency) and the extent to which the word is unique across documents (Inverse Document Frequency).
+    
+2.  Cosine similarity is a method used to measure the degree to which two vectors (in this case, vector representations of words) are in lexical relationship to each other. In the context of Ayatnesia, cosine similarity is used to compare the TF-IDF vector between the verses of the Qur'an and the keyword. The higher the cosine similarity value between the verse and the keyword, the more lexically similar the two things are.
+
+While to measure Semantic Similarity in Ayatnesia when searching for verses in the Qur'an, the method used is Word Embedding with FastText. This method involves representing words as high-dimensional vectors in a semantic space using FastText, a powerful word embedding tool. 
+
+These vector representations capture the semantic meanings of words, allowing Ayatnesia to compare and measure the similarity between verses in the Qur'an based on their semantic content. By utilizing Word Embedding with FastText, Ayatnesia enables users to find verses with similar semantic meanings, enhancing the effectiveness of verse searches and facilitating a deeper understanding of the Qur'an.
+
+
 *The API empowers you with these features to enhance your search capabilities and facilitate a comprehensive analysis of the Quran. 🚀*
 
 ### Features
