@@ -34,8 +34,8 @@ It provides an efficient way to access and retrieve information from the Quran.
 - Get all Qur'an Surahs (✅ done).
 - Get detailed information about a specific Quran Surah (✅ done).
 - Search using lexical measures (✅ done).
-- Search using semantic measures (⏳ _in progress_).
-- Search using lexical semantic measures (⏳ _in progress_).
+- Search using semantic measures (✅ done).
+- Search using lexical semantic measures (✅ done).
 
 ## Requirements:
 
