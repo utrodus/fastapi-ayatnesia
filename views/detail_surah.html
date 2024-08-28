@@ -7,7 +7,7 @@
 <section id="content-wrapper" class="container-fluid contents">
     <div class="row arabic-block mt-3">
         <div class="col-sm-12 col-xl-3 ">
-            <div class="card box-shadow-none mb-3 sticky-top" style="top:5rem; z-index: 99;" >
+            <div class="card box-shadow-none mb-3 sticky-top" style="top:5rem; z-index: 99;">
                 <div class="card-body">
                     <div class="row" style="padding: 1rem !important;">
                         <p class="mr-3">{{detail_surah['id']}}. </p>
@@ -41,10 +41,45 @@
                         <span class="number">{{ayah['number_in_surah']}}</span>
                         <div class="media-body">
                             <h5 class="mt-0 mb-3"> {{ayah['arabic']}}</h5>
-                            <p class="mb-3 mt-4" style="text-align: justify;"> <b> Artinya:</b> {{ayah['translation']}}</p>
+                            <p class="mb-3 mt-4" style="text-align: justify;"> <b> Artinya:</b> {{ayah['translation']}}
+                            </p>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-outline-info " data-toggle="modal"
+                                    data-target=".modal-tafsir-{{ayah['id']}}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+                                        <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"></path>
+                                        <path d="M3 6l0 13"></path>
+                                        <path d="M12 6l0 13"></path>
+                                        <path d="M21 6l0 13"></path>
+                                    </svg>&nbsp;
+                                    Baca Tafsir</button>
+                                <button type="button" class="btn btn-outline-secondary ml-2 copy-button" 
+                                    data-surah-number="{{detail_surah['id']}}"
+                                    data-surah-name="{{detail_surah['name']}}"
+                                    data-ayah-number="{{ayah['number_in_surah']}}" data-arabic="{{ayah['arabic']}}"
+                                    data-translation="{{ayah['translation']}}" data-tafsir="{{ayah['tafsir']}}">
+                                    <svg xmlns=" http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-clipboard" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path
+                                            d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2">
+                                        </path>
+                                        <path
+                                            d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z">
+                                        </path>
+                                    </svg>&nbsp;
+                                </button>
 
-                            <button type="button" class="btn btn-outline-info " data-toggle="modal"
-                                data-target=".modal-tafsir-{{ayah['id']}}">Baca Tafsir</button>
+
+                            </div>
+
 
                             <div class="modal fade modal-tafsir-{{ayah['id']}}" tabindex="-1" role="dialog"
                                 style="padding-top: 5rem; padding-bottom: 5rem;" aria-labelledby="model tafsir"
@@ -52,8 +87,12 @@
                                 <div class="modal-dialog ">
 
                                     <div class="modal-content">
-                                        <h5 style="text-align: right !important; color: black !important;">{{ayah['arabic']}}</h5>
-                                        <p style="font-size: 1.1em;" class="modal-title p-0 m-0 mt-4 text-info"><b>Tafsir Ringkas Kemenag ({{detail_surah['name']}} Ayat {{ayah['number_in_surah']}}):</b>  </p>
+                                        <h5 style="text-align: right !important; color: black !important;">
+                                            {{ayah['arabic']}}</h5>
+                                        <p style="font-size: 1.1em;" class="modal-title p-0 m-0 mt-4 text-info">
+                                            <b>Tafsir Ringkas Kemenag ({{detail_surah['name']}} Ayat
+                                                {{ayah['number_in_surah']}}):</b>
+                                        </p>
 
                                         <button type="button" data-dismiss="modal" aria-label="Close" style="    position: absolute;
                                             right: -0.5rem;
@@ -89,7 +128,7 @@
         </div>
 
     </div>
-    
+
 </section>
 
 {% endblock content %}

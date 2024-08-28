@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  app:
+    image: ayatnesia
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    dns:
+      - 8.8.8.8  
+    restart: always          
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/test-connection || exit 1"]
+

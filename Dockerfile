@@ -11,6 +11,6 @@ RUN python -c "import nltk; nltk.download('popular')"
 
 COPY . .
 
-EXPOSE 3100
+EXPOSE 3000
 
-CMD ["gunicorn", "main:app"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3000", "--timeout-keep-alive", "300"]

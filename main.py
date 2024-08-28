@@ -1,34 +1,27 @@
-from fastapi import FastAPI,Request, Query
+from fastapi import FastAPI,Request, Query, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 
 import re
 import sys
 
-from pydantic import BaseModel
 sys.path.append("src")
 from src.database.database import check_database_connection, get_all_surahs, get_all_ayahs_by_surah_id, get_all_ayahs
 from src.preprocessing.preprocessing import Preprocessing
+from src.models.search_result_model import SearchResult
 from src.similarity_measure.lexical.lexical_measure import LexicalMeasure
 from src.similarity_measure.semantic.semantic_measure import SemanticMeasure, WordEmbedding
 from src.similarity_measure.lexical_semantic.lexical_semantic_measure import LexicalSemanticMeasure
 import time
-import uvicorn
 
 templates = Jinja2Templates(directory="views")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Set up CORS
-# origins = [
-#     "http://localhost",
-#     "http://127.0.0.1:8000",  
-#     "https://riset.unublitar.ac.id", 
-#     "https://riset.unublitar.ac.id/ayatnesia" 
-# ]
 
 origins = ['*']
 app.add_middleware(
@@ -63,7 +56,7 @@ It provides an efficient way to access and retrieve information from the Quran.
 - **Search Using Lexical-Semantic Measures**: Utilize a combined approach of lexical and semantic measures for more accurate and comprehensive search results.
 
 ## 📞 Contact Us
-If you have any questions, feedback, or need assistance regarding the AyatNesia API, please don't hesitate to [contact us](https://www.utrodus.my.id/). We are here to help you!
+If you have any questions, feedback, or need assistance regarding the AyatNesia API, please don't hesitate to [contact us](https://www.utrodus.com/). We are here to help you!
 
     """
 )
@@ -86,19 +79,17 @@ semantic_measure = SemanticMeasure(word_embedding=word_embedding, all_ayahs=all_
 # initialize lexical semantic measure
 lexical_semantic_measure = LexicalSemanticMeasure(all_ayahs=all_ayahs, lexical_measure=lexical_measure, semantic_measure=semantic_measure)
 
-class SearchResult(BaseModel):
-    execution_time: float
-    results: list
+
     
 # Frontend Endpoints
-@app.get("/", tags=["🌐 Web App for AyatNesia"])
+@app.get("/", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def home(request: Request):
     """
     ## 🏠 Endpoint that redirects to the home page.
     """
     return templates.TemplateResponse("index.html", {"request": request, "all_surahs": all_surah})
 
-@app.get("/detail-surah/{id}", tags=["🌐 Web App for AyatNesia"])
+@app.get("/detail-surah/{id}", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def detail_surah(request: Request, id: int):
     """
     ## 📜 Endpoint that redirects to the detail surah page.
@@ -106,7 +97,7 @@ async def detail_surah(request: Request, id: int):
     detail_surah = get_all_ayahs_by_surah_id(id)
     return templates.TemplateResponse("detail_surah.html", {"request": request, "all_surahs": all_surah, "detail_surah": detail_surah})
 
-@app.get("/search", tags=["🌐 Web App for AyatNesia"])
+@app.get("/search", tags=["🌐 Web App for AyatNesia"], include_in_schema=False)
 async def search(request: Request):
     """
     ## 🔍 Endpoint that redirects to the search page.
@@ -114,8 +105,18 @@ async def search(request: Request):
     return templates.TemplateResponse("search.html", {"request": request, "all_surahs": all_surah})
 
 
+
 # API Endpoints
-@app.get("/api/test-connection", tags=["🔌 API: Test Connection"])
+
+@app.get("/api/docs", include_in_schema=False)
+async def get_documentation():
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="Swagger")
+
+@app.get("/openapi.json", include_in_schema=False)
+async def openapi():
+    return get_openapi(title=app.title, version=app.version, routes=app.routes)
+
+@app.get("/api/test-connection", tags=["🔌 API: Test Connection"],status_code=status.HTTP_200_OK)
 async def test_connections():
     """
     ## Test the connection to the AyatNesia API. ⚡️
@@ -210,5 +211,3 @@ async def search(query: str, measure_type: str = Query("combination", title="Mea
         else:
             return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
         
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8000)
