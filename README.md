@@ -5,6 +5,10 @@
 
 - [Quran Finder - API](#quran-finder---api)
   - [Table of Contents:](#table-of-contents)
+  - [Screenshots \& Demo](#screenshots--demo)
+    - [Web App](#web-app)
+    - [API Docs](#api-docs)
+    - [Demo](#demo)
   - [Description](#description)
     - [Features](#features)
   - [Requirements:](#requirements)
@@ -18,9 +22,18 @@
     - [View Logs docker container process](#view-logs-docker-container-process)
     - [remove any stopped containers and all unused images](#remove-any-stopped-containers-and-all-unused-images)
 
+## Screenshots & Demo
+### Web App
+![featured image](featured.png)
+
+### API Docs
+![API Docs](api_docs.png)
+
+### Demo
+<iframe width="560" height="315" src="https://drive.google.com/file/d/1e8TiNE4L0-hBtsoqf5fNUbTXHF3VUcwk/view?usp=drive_link" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 ## Description
-
 The Quran Search API allows you to search for text using various measures such as lexical, semantic, and lexical semantic.
 
 
