@@ -1,9 +1,9 @@
-# Quran Finder - API
+# Quran search - API
 >   This final year project focuses on searching Quranic verses using lexical, semantic, and combined approaches.
 
 ## Table of Contents:
 
-- [Quran Finder - API](#quran-finder---api)
+- [Quran search - API](#quran-search---api)
   - [Table of Contents:](#table-of-contents)
   - [Screenshots \& Demo](#screenshots--demo)
     - [Web App](#web-app)
