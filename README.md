@@ -22,14 +22,16 @@
     - [View Logs docker container process](#view-logs-docker-container-process)
     - [remove any stopped containers and all unused images](#remove-any-stopped-containers-and-all-unused-images)
 
-## Screenshots & Demo
+## Demo & Screenshots
+
+### Demo
+https://github.com/user-attachments/assets/f7317fa5-1f32-4d97-9f8b-c688e8ba5ece
+
 ### Web App
 ![featured image](featured.png)
 
 ### API Docs
 ![API Docs](api_docs.png)
-
-### Demo
 
 ## Description
 The Quran Search API allows you to search for text using various measures such as lexical, semantic, and lexical semantic.
