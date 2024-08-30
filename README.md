@@ -30,8 +30,6 @@
 ![API Docs](api_docs.png)
 
 ### Demo
-<iframe width="560" height="315" src="https://drive.google.com/file/d/1e8TiNE4L0-hBtsoqf5fNUbTXHF3VUcwk/view?usp=drive_link" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 
 ## Description
 The Quran Search API allows you to search for text using various measures such as lexical, semantic, and lexical semantic.
