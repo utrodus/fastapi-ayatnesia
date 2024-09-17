@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Request, Query, status
+from fastapi import FastAPI,Request, Query, status, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -185,29 +185,31 @@ async def search(query: str, measure_type: str = Query("combination", title="Mea
     if query == "":
         return JSONResponse(status_code=400, content={"detail": "Kata kunci tidak boleh kosong."})
     else:
-        query_preprocessed = Preprocessing(query).execute()
+        try:
+            query_preprocessed = Preprocessing(query).execute()
 
-        if measure_type == "lexical":
-            start_time = time.time()
-            results = lexical_measure.get_top_similarities(query_preprocessed, top_relevance)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            response = SearchResult(execution_time=execution_time, results=results)
-            return response
-        elif measure_type == "semantic":
-            start_time = time.time()
-            results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            response = SearchResult(execution_time=execution_time, results=results)
-            return response
-        elif measure_type == "combination":
-            start_time = time.time()
-            results = lexical_semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            response = SearchResult(execution_time=execution_time, results=results)
-            return response
-        else:
-            return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
-        
+            if measure_type == "lexical":
+                start_time = time.time()
+                results = lexical_measure.get_top_similarities(query_preprocessed, top_relevance)
+                end_time = time.time()
+                execution_time = end_time - start_time
+                response = SearchResult(execution_time=execution_time, results=results)
+                return response
+            elif measure_type == "semantic":
+                start_time = time.time()
+                results = semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+                end_time = time.time()
+                execution_time = end_time - start_time
+                response = SearchResult(execution_time=execution_time, results=results)
+                return response
+            elif measure_type == "combination":
+                start_time = time.time()
+                results = lexical_semantic_measure.get_top_similarities(query_preprocessed, top_relevance)
+                end_time = time.time()
+                execution_time = end_time - start_time
+                response = SearchResult(execution_time=execution_time, results=results)
+                return response
+            else:
+                return JSONResponse(status_code=400, content={"detail": "Measure type tidak ditemukan."})
+        except Exception as e:
+              raise HTTPException(status_code=500, detail=f"Terjadi kesalahan saat melakukan pencarian: {str(e)}")
